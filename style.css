@@ -55,41 +55,6 @@ body {
 }
 
 /* ============================================
-   INPUT AREA
-   ============================================ */
-.input-area {
-    text-align: center;
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    flex-shrink: 0;
-    margin: 3px 0;
-}
-
-.input-area input {
-    padding: 8px 14px;
-    width: clamp(180px, 25vw, 260px);
-    border: 2px solid #667eea;
-    border-radius: 8px;
-    font-size: clamp(13px, 1.1vw, 16px);
-    background: rgba(255, 255, 255, 0.9);
-    transition: all 0.3s;
-}
-
-.input-area input:focus {
-    outline: none;
-    border-color: #f39c12;
-    box-shadow: 0 0 30px rgba(243, 156, 18, 0.2);
-}
-
-.input-area small {
-    color: #888;
-    font-size: clamp(9px, 0.8vw, 11px);
-    display: block;
-    margin-top: 4px;
-}
-
-/* ============================================
    BUTTONS
    ============================================ */
 .btn {
@@ -100,15 +65,6 @@ body {
     font-weight: bold;
     font-size: clamp(12px, 1vw, 15px);
     transition: all 0.3s;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-}
-.btn-primary:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 30px rgba(102, 126, 234, 0.4);
 }
 
 .btn-danger {
@@ -207,12 +163,10 @@ body {
     overflow: hidden;
 }
 
-/* Grid lines - hidden by default */
 #masterGrid.show-grid {
     border-color: rgba(243, 156, 18, 0.5);
 }
 
-/* Each cell - NO GAPS, FULL SPACE */
 .grid-cell {
     display: flex;
     flex-wrap: wrap;
@@ -228,13 +182,11 @@ body {
     flex: 1;
 }
 
-/* Show cell borders when grid is visible */
 #masterGrid.show-grid .grid-cell {
     border-color: rgba(243, 156, 18, 0.2);
     background: rgba(255, 255, 255, 0.02);
 }
 
-/* Cell labels - visible only when grid is shown */
 .cell-label {
     position: absolute;
     top: 1px;
@@ -253,7 +205,7 @@ body {
 }
 
 /* ============================================
-   NUMBER CIRCLES - NO GAPS, LARGER SIZES
+   NUMBER CIRCLES - NO GAPS
    ============================================ */
 .num {
     display: flex;
@@ -271,7 +223,6 @@ body {
     position: relative;
 }
 
-/* Size classes - LARGER diameters */
 .num.size-xs {
     width: 34px;
     height: 34px;
@@ -309,14 +260,12 @@ body {
     background: linear-gradient(135deg, #a18cd1, #fbc2eb);
 }
 
-/* Hover effect */
 .num:hover:not(.found):not(.disabled) {
     transform: scale(1.12);
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
     z-index: 10;
 }
 
-/* Found state - green */
 .num.found {
     background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
     opacity: 0.4;
@@ -325,13 +274,11 @@ body {
     box-shadow: none !important;
 }
 
-/* Wrong click - flash red */
 .num.wrong {
     animation: shakeFlash 0.4s;
     box-shadow: 0 0 40px rgba(231, 76, 60, 0.8) !important;
 }
 
-/* Current target highlight */
 .num.current {
     animation: glowPulse 0.8s ease-in-out infinite;
     box-shadow: 0 0 30px rgba(243, 156, 18, 0.6) !important;
@@ -593,7 +540,7 @@ body {
 }
 
 /* ============================================
-   RESPONSIVE - FILLS ENTIRE PAGE
+   RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
     .num.size-xs { width: 30px; height: 30px; font-size: 10px; }
@@ -643,8 +590,6 @@ body {
     .num.size-xxl { width: 48px; height: 48px; font-size: 16px; }
     .grid-cell { gap: 0.5px; }
     #masterGrid { min-height: 150px; border-radius: 4px; }
-    .input-area { padding: 6px 10px; }
-    .input-area input { width: 100%; font-size: 12px; padding: 6px 10px; }
     .btn { padding: 5px 12px; font-size: 10px; }
     .password-box { padding: 15px 12px; }
     .password-box h2 { font-size: 16px; }
