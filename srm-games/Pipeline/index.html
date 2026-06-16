@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRM Business Pipeline - Team Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .game-container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 12px 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            height: 100vh;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            flex-shrink: 0;
+            margin-bottom: 3px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: clamp(16px, 2.2vw, 26px);
+            letter-spacing: 1px;
+        }
+
+        .header h1 span {
+            color: #e74c3c;
+        }
+
+        .header .sub {
+            color: #666;
+            font-size: clamp(9px, 0.8vw, 12px);
+            margin-top: 1px;
+        }
+
+        .header .process-name {
+            display: inline-block;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: clamp(11px, 1vw, 15px);
+            margin-top: 2px;
+        }
+
+        .header .level-badge {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: clamp(9px, 0.7vw, 12px);
+            margin-left: 6px;
+        }
+
+        .team-selection {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin: 3px 0;
+            padding: 4px 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .team-selection label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: clamp(10px, 0.8vw, 13px);
+        }
+
+        .team-selection select {
+            padding: 3px 8px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            font-size: clamp(10px, 0.8vw, 13px);
+            font-weight: bold;
+            background: white;
+            cursor: pointer;
+        }
+
+        .team-selection select:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .team-selection .team-btn {
+            padding: 3px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: clamp(9px, 0.7vw, 12px);
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+
+        .team-btn.team-a {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        .team-btn.team-a:hover {
+            transform: scale(1.05);
+        }
+        .team-btn.team-b {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        .team-btn.team-b:hover {
+            transform: scale(1.05);
+        }
+        .team-btn.team-c {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        .team-btn.team-c:hover {
+            transform: scale(1.05);
+        }
+        .team-btn.team-d {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+        }
+        .team-btn.team-d:hover {
+            transform: scale(1.05);
+        }
+        .team-btn.active-team {
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .team-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 4px;
+            flex-shrink: 0;
+            margin: 2px 0;
+            padding: 3px 6px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .team-score-card {
+            text-align: center;
+            padding: 2px 4px;
+            background: white;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .team-score-card.active-team-card {
+            border-color: #f39c12;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .team-score-card .team-name {
+            font-weight: bold;
+            font-size: clamp(8px, 0.6vw, 11px);
+        }
+
+        .team-score-card .team-score-value {
+            font-size: clamp(14px, 1.5vw, 22px);
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .team-score-card .team-level-value {
+            font-size: clamp(7px, 0.5vw, 10px);
+            color: #888;
+        }
+
+        .team-color-a { border-color: #3498db; }
+        .team-color-a .team-name { color: #3498db; }
+        .team-color-b { border-color: #e74c3c; }
+        .team-color-b .team-name { color: #e74c3c; }
+        .team-color-c { border-color: #27ae60; }
+        .team-color-c .team-name { color: #27ae60; }
+        .team-color-d { border-color: #f39c12; }
+        .team-color-d .team-name { color: #f39c12; }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            flex-shrink: 0;
+            margin: 2px 0;
+            padding: 2px 6px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .label {
+            font-size: clamp(5px, 0.4vw, 8px);
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-item .value {
+            font-size: clamp(13px, 1.3vw, 18px);
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-item .value.timer {
+            color: #e74c3c;
+        }
+        .stat-item .value.timer.warning {
+            color: #f39c12;
+        }
+        .stat-item .value.timer.danger {
+            color: #e74c3c;
+            animation: pulse 0.5s ease-in-out infinite;
+        }
+        .stat-item .value.score {
+            color: #27ae60;
+        }
+        .stat-item .value.level {
+            color: #3498db;
+        }
+
+        /* ============================================
+           BUTTONS ROW - TOP
+           ============================================ */
+        .buttons-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin: 3px 0;
+            padding: 4px 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #f39c12, #d68910);
+            color: #fff;
+            padding: 5px 25px;
+            font-size: clamp(13px, 1.2vw, 18px);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 15px rgba(243, 156, 18, 0.3);
+            animation: pulseGlow 1.5s ease-in-out infinite;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 30px rgba(243, 156, 18, 0.5);
+        }
+
+        .btn-start:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+            transform: none !important;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 3px 15px rgba(243, 156, 18, 0.3); }
+            50% { box-shadow: 0 3px 30px rgba(243, 156, 18, 0.6); }
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: #fff;
+            padding: 5px 25px;
+            font-size: clamp(13px, 1.2vw, 18px);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 30px rgba(46, 204, 113, 0.5);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-hint {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 5px 18px;
+            font-size: clamp(11px, 1vw, 15px);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-hint:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-hint:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ============================================
+           STEPS CONTAINER - ALL STEPS VISIBLE
+           ============================================ */
+        #stepsContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 4px 6px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            flex: 1;
+            min-height: 0;
+            overflow: visible;
+            justify-content: center;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: #ffffff;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            user-select: none;
+            flex-shrink: 0;
+            min-height: 26px;
+        }
+
+        .step-item:hover:not(.disabled):not(.locked) {
+            transform: translateX(3px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .step-item .step-number {
+            font-size: clamp(10px, 0.8vw, 14px);
+            font-weight: bold;
+            color: #3498db;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .step-item .step-text {
+            font-size: clamp(9px, 0.75vw, 13px);
+            color: #2c3e50;
+            flex: 1;
+            line-height: 1.2;
+        }
+
+        .step-item .step-badge {
+            font-size: clamp(7px, 0.55vw, 10px);
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: #e9ecef;
+            color: #888;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .step-item.selected {
+            border-left-color: #f39c12;
+            background: #fff9e6;
+            box-shadow: 0 2px 12px rgba(243, 156, 18, 0.15);
+        }
+
+        .step-item.selected .step-number {
+            color: #f39c12;
+        }
+
+        .step-item.locked {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .step-item.locked:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .step-item.disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+
+        .step-item.disabled:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ============================================
+           MESSAGE
+           ============================================ */
+        .msg {
+            text-align: center;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+            margin: 2px 0;
+            font-size: clamp(10px, 0.8vw, 14px);
+            flex-shrink: 0;
+        }
+
+        .msg.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .msg.fail {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .msg.info {
+            display: block;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .msg.celebrate {
+            display: block;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #2c3e50;
+            font-size: clamp(12px, 1.2vw, 16px);
+            border: 2px solid #f39c12;
+        }
+
+        .msg.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 3px solid #e74c3c;
+            font-size: clamp(12px, 1.2vw, 16px);
+        }
+
+        /* ============================================
+           OVERLAYS
+           ============================================ */
+        #levelOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #levelOverlay.active {
+            display: flex;
+        }
+
+        .level-box {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .level-box h2 {
+            color: #2c3e50;
+            font-size: clamp(20px, 2.5vw, 30px);
+            margin-bottom: 6px;
+        }
+
+        .level-box h2 span {
+            color: #27ae60;
+        }
+
+        .level-box .level-stats {
+            font-size: clamp(14px, 1.3vw, 18px);
+            color: #555;
+            margin: 6px 0;
+        }
+
+        .level-box .level-stats strong {
+            color: #e74c3c;
+        }
+
+        .level-box .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .level-box .btn {
+            min-width: 80px;
+            padding: 8px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(13px, 1.1vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+
+        .level-box .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        .level-box .btn-success:hover {
+            transform: scale(1.05);
+        }
+
+        #gameCompleteOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #gameCompleteOverlay.active {
+            display: flex;
+        }
+
+        .complete-box {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 520px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .complete-box h1 {
+            color: #f39c12;
+            font-size: clamp(24px, 3vw, 36px);
+            margin-bottom: 5px;
+        }
+
+        .complete-box h2 {
+            color: #2c3e50;
+            font-size: clamp(18px, 2.2vw, 26px);
+            margin-bottom: 6px;
+        }
+
+        .complete-box .winner-announce {
+            font-size: clamp(20px, 2.5vw, 32px);
+            font-weight: bold;
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .complete-box .final-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .complete-box .final-team-score {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+        .complete-box .final-team-score .team-name {
+            font-weight: bold;
+            font-size: clamp(13px, 1.1vw, 16px);
+        }
+
+        .complete-box .final-team-score .team-score {
+            font-size: clamp(20px, 2.2vw, 32px);
+            font-weight: bold;
+        }
+
+        .complete-box .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .complete-box .btn {
+            padding: 8px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(13px, 1.1vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+
+        .complete-box .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        .complete-box .btn-success:hover {
+            transform: scale(1.05);
+        }
+
+        .complete-box .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .complete-box .btn-primary:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .game-container { padding: 8px 10px; }
+            .team-selection { gap: 4px; padding: 3px 6px; }
+            .team-scores { grid-template-columns: repeat(2, 1fr); gap: 3px; padding: 2px 4px; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 2px 4px; }
+            .buttons-row { gap: 5px; padding: 3px 6px; }
+            .btn-start { padding: 4px 16px; font-size: clamp(11px, 1vw, 14px); }
+            .btn-submit { padding: 4px 16px; font-size: clamp(11px, 1vw, 14px); }
+            .btn-hint { padding: 4px 12px; font-size: clamp(10px, 0.8vw, 12px); }
+            .step-item { padding: 3px 8px; min-height: 22px; gap: 5px; }
+            .step-item .step-text { font-size: clamp(8px, 0.65vw, 10px); }
+            .step-item .step-badge { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .game-container { padding: 5px 6px; border-radius: 12px; }
+            .team-scores { grid-template-columns: repeat(2, 1fr); }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .buttons-row { flex-wrap: wrap; gap: 4px; }
+            .btn-start { padding: 3px 12px; font-size: 10px; }
+            .btn-submit { padding: 3px 12px; font-size: 10px; }
+            .btn-hint { padding: 3px 8px; font-size: 9px; }
+            .step-item { padding: 2px 6px; min-height: 18px; gap: 4px; }
+            .step-item .step-number { min-width: 14px; font-size: 9px; }
+            .step-item .step-text { font-size: clamp(7px, 0.5vw, 8px); }
+            .team-selection { flex-direction: column; gap: 2px; padding: 2px 4px; }
+            .team-selection .team-btn { padding: 2px 6px; font-size: 8px; }
+            .msg { font-size: 8px; padding: 2px 4px; }
+            .team-score-card .team-score-value { font-size: 12px; }
+            .team-score-card .team-name { font-size: 7px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🏢 SRM <span>BUSINESS PIPELINE</span></h1>
+            <div class="sub">Arrange the steps in the correct business sequence</div>
+            <div>
+                <span class="process-name" id="processName">Loading...</span>
+                <span class="level-badge" id="levelBadge">Level 1 / 21</span>
+            </div>
+        </div>
+
+        <!-- TEAM SELECTION -->
+        <div class="team-selection">
+            <label>👥 Team:</label>
+            <select id="teamSelector" onchange="switchTeam()">
+                <option value="0">Team A</option>
+                <option value="1">Team B</option>
+                <option value="2">Team C</option>
+                <option value="3">Team D</option>
+            </select>
+            <button class="team-btn team-a active-team" data-team="0" onclick="switchToTeam(0)">🔵 A</button>
+            <button class="team-btn team-b" data-team="1" onclick="switchToTeam(1)">🔴 B</button>
+            <button class="team-btn team-c" data-team="2" onclick="switchToTeam(2)">🟢 C</button>
+            <button class="team-btn team-d" data-team="3" onclick="switchToTeam(3)">🟡 D</button>
+        </div>
+
+        <!-- TEAM SCORES -->
+        <div class="team-scores" id="teamScores">
+            <div class="team-score-card team-color-a active-team-card" data-team="0">
+                <div class="team-name">🔵 Team A</div>
+                <div class="team-score-value" id="teamScore0">0</div>
+                <div class="team-level-value">Level: <span id="teamLevel0">1</span></div>
+            </div>
+            <div class="team-score-card team-color-b" data-team="1">
+                <div class="team-name">🔴 Team B</div>
+                <div class="team-score-value" id="teamScore1">0</div>
+                <div class="team-level-value">Level: <span id="teamLevel1">1</span></div>
+            </div>
+            <div class="team-score-card team-color-c" data-team="2">
+                <div class="team-name">🟢 Team C</div>
+                <div class="team-score-value" id="teamScore2">0</div>
+                <div class="team-level-value">Level: <span id="teamLevel2">1</span></div>
+            </div>
+            <div class="team-score-card team-color-d" data-team="3">
+                <div class="team-name">🟡 Team D</div>
+                <div class="team-score-value" id="teamScore3">0</div>
+                <div class="team-level-value">Level: <span id="teamLevel3">1</span></div>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="label">⏱️ Time</div>
+                <div class="value timer" id="timer">60</div>
+            </div>
+            <div class="stat-item">
+                <div class="label">📝 Selected</div>
+                <div class="value score" id="score">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="label">📊 Level</div>
+                <div class="value level" id="levelDisplay">1</div>
+            </div>
+            <div class="stat-item">
+                <div class="label">⭐ Total</div>
+                <div class="value" id="totalScoreDisplay" style="color:#f39c12;">0</div>
+            </div>
+        </div>
+
+        <!-- BUTTONS ROW - TOP -->
+        <div class="buttons-row">
+            <button class="btn-start" id="startBtn" onclick="startRound()">▶ START ROUND</button>
+            <button class="btn-submit" id="submitBtn" onclick="submitAnswer()" disabled>📤 SUBMIT</button>
+            <button class="btn-hint" onclick="showHint()">💡 BRAIN STORMER</button>
+        </div>
+
+        <!-- STEPS CONTAINER -->
+        <div id="stepsContainer"></div>
+
+        <!-- MESSAGE -->
+        <div id="msg" class="msg"></div>
+    </div>
+
+    <!-- LEVEL COMPLETE OVERLAY -->
+    <div id="levelOverlay">
+        <div class="level-box">
+            <h2>🎉 Level <span id="levelCompleteNum">1</span> Complete!</h2>
+            <div class="level-stats">
+                ✅ Correct Sequence: <strong id="levelScore">0</strong><br>
+                ⭐ Score: <strong id="levelTotalScore" style="color:#27ae60;">0</strong>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="nextLevel()">🚀 Next Level</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME COMPLETE OVERLAY -->
+    <div id="gameCompleteOverlay">
+        <div class="complete-box">
+            <h1>🏆 GAME COMPLETE!</h1>
+            <h2>All 21 Levels Completed!</h2>
+            <div class="winner-announce" id="winnerAnnounce" style="color:#f39c12;">🏆 WINNER: Team A</div>
+            <div class="final-scores" id="finalScores">
+                <div class="final-team-score">
+                    <div class="team-name">🔵 Team A</div>
+                    <div class="team-score" style="color:#3498db;" id="finalScore0">0</div>
+                </div>
+                <div class="final-team-score">
+                    <div class="team-name">🔴 Team B</div>
+                    <div class="team-score" style="color:#e74c3c;" id="finalScore1">0</div>
+                </div>
+                <div class="final-team-score">
+                    <div class="team-name">🟢 Team C</div>
+                    <div class="team-score" style="color:#27ae60;" id="finalScore2">0</div>
+                </div>
+                <div class="final-team-score">
+                    <div class="team-name">🟡 Team D</div>
+                    <div class="team-score" style="color:#f39c12;" id="finalScore3">0</div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="playAgain()">🔄 Play Again</button>
+                <button class="btn btn-primary" onclick="closeCompleteOverlay()">📊 View Scores</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SRM BUSINESS PIPELINE - 21 LEVELS
+        // ============================================
+
+        const PROCESSES = [{
+            name: '🎯 Lead Generation',
+            steps: [
+                'Identify target market segments',
+                'Research potential clients',
+                'Create prospect list',
+                'Reach out via cold calls/emails',
+                'Schedule initial meeting',
+                'Present company capabilities',
+                'Gather client requirements',
+                'Qualify lead potential',
+                'Move to opportunity stage'
+            ]
+        }, {
+            name: '🔍 Lead Qualification',
+            steps: [
+                'Review lead information',
+                'Assess client budget',
+                'Understand decision-making process',
+                'Identify key stakeholders',
+                'Evaluate project timeline',
+                'Check competitor presence',
+                'Determine client urgency',
+                'Score lead priority',
+                'Approve for quotation'
+            ]
+        }, {
+            name: '📄 Quotation Submission',
+            steps: [
+                'Analyze client requirements',
+                'Prepare technical specifications',
+                'Calculate cost estimates',
+                'Review margins and pricing',
+                'Create quotation document',
+                'Add terms and conditions',
+                'Internal review and approval',
+                'Submit quotation to client',
+                'Follow up on submission'
+            ]
+        }, {
+            name: '🤝 Negotiation',
+            steps: [
+                'Acknowledge client queries',
+                'Review quotation feedback',
+                'Identify negotiation points',
+                'Prepare counter-proposals',
+                'Present value proposition',
+                'Discuss pricing adjustments',
+                'Address client concerns',
+                'Reach agreement on terms',
+                'Document mutual understanding'
+            ]
+        }, {
+            name: '✅ Finalisation',
+            steps: [
+                'Review final agreement terms',
+                'Prepare contract documents',
+                'Get internal approvals',
+                'Share contract with client',
+                'Address final queries',
+                'Get client signature',
+                'Get management signature',
+                'Share signed contract',
+                'Announce deal closure'
+            ]
+        }, {
+            name: '📐 Drawings Preparation',
+            steps: [
+                'Review technical requirements',
+                'Create initial drawings',
+                'Get client feedback',
+                'Revise drawings as needed',
+                'Get engineering approval',
+                'Prepare final drawings',
+                'Share with client for sign-off',
+                'Archive approved drawings',
+                'Share with production team'
+            ]
+        }, {
+            name: '🏗️ Site Preparation',
+            steps: [
+                'Visit site for assessment',
+                'Check site conditions',
+                'Prepare site layout plan',
+                'Coordinate with client team',
+                'Arrange site access',
+                'Prepare safety measures',
+                'Schedule installation date',
+                'Inform logistics team',
+                'Confirm site readiness'
+            ]
+        }, {
+            name: '💰 Before Delivery Payment',
+            steps: [
+                'Review payment terms',
+                'Prepare payment invoice',
+                'Share payment schedule',
+                'Follow up on payment',
+                'Confirm payment receipt',
+                'Update internal records',
+                'Release for production',
+                'Notify accounts team',
+                'Proceed to delivery'
+            ]
+        }, {
+            name: '🚚 Material Delivery & Payment',
+            steps: [
+                'Coordinate with logistics',
+                'Prepare delivery schedule',
+                'Dispatch materials',
+                'Track shipment status',
+                'Receive materials at site',
+                'Inspect delivered items',
+                'Get client sign-off',
+                'Generate delivery challan',
+                'Process final payment'
+            ]
+        }, {
+            name: '🔑 Handing Over',
+            steps: [
+                'Prepare handover documents',
+                'Schedule handover meeting',
+                'Conduct final inspection',
+                'Demonstrate operations',
+                'Get client acceptance',
+                'Share operation manuals',
+                'Train client team',
+                'Formal handover ceremony',
+                'Get completion certificate'
+            ]
+        }, {
+            name: '🆓 Free Service',
+            steps: [
+                'Schedule free service visit',
+                'Coordinate with technical team',
+                'Visit client site',
+                'Check equipment operation',
+                'Perform maintenance checks',
+                'Update service records',
+                'Get client feedback',
+                'Document service report',
+                'Identify upsell opportunities'
+            ]
+        }, {
+            name: '📊 Annual Maintenance Quotation',
+            steps: [
+                'Review equipment condition',
+                'Plan annual maintenance schedule',
+                'Calculate AMC costs',
+                'Prepare AMC quotation',
+                'Add service scope details',
+                'Include renewal terms',
+                'Internal review of AMC',
+                'Submit AMC to client',
+                'Schedule discussion meeting'
+            ]
+        }, {
+            name: '🤝 AMC Negotiation & Finalisation',
+            steps: [
+                'Review client AMC feedback',
+                'Address coverage concerns',
+                'Adjust pricing if needed',
+                'Present AMC benefits',
+                'Reach agreement on terms',
+                'Prepare AMC contract',
+                'Get client signature',
+                'Get internal approvals',
+                'Finalize AMC agreement'
+            ]
+        }, {
+            name: '💰 AMC Payment',
+            steps: [
+                'Generate AMC invoice',
+                'Share with client',
+                'Follow up on payment',
+                'Confirm receipt',
+                'Update AMC records',
+                'Activate service schedule',
+                'Notify service team',
+                'Complete payment formalities',
+                'Archive payment records'
+            ]
+        }, {
+            name: '🔄 Modernisation Upgradation',
+            steps: [
+                'Identify upgradation needs',
+                'Research latest technology',
+                'Prepare upgrade proposal',
+                'Present to client',
+                'Get initial approval',
+                'Plan upgrade schedule',
+                'Coordinate with OEM',
+                'Prepare implementation plan',
+                'Start upgradation process'
+            ]
+        }, {
+            name: '📄 Upgradation Quotation',
+            steps: [
+                'Detail upgrade scope',
+                'Calculate project costs',
+                'Prepare itemized quote',
+                'Add upgrade benefits',
+                'Include ROI analysis',
+                'Review and approve quote',
+                'Submit to client',
+                'Schedule presentation',
+                'Follow up on quote'
+            ]
+        }, {
+            name: '✅ Upgradation Finalisation & Payment',
+            steps: [
+                'Review client feedback',
+                'Finalize upgrade agreement',
+                'Get client signature',
+                'Prepare payment schedule',
+                'Get advance payment',
+                'Start upgrade project',
+                'Monitor implementation',
+                'Complete upgrade',
+                'Get final payment'
+            ]
+        }, {
+            name: '📄 Product Replacement Quotation',
+            steps: [
+                'Identify replacement needs',
+                'Assess product lifecycle',
+                'Prepare replacement proposal',
+                'Calculate cost of replacement',
+                'Add trade-in value if any',
+                'Create final quotation',
+                'Internal approvals',
+                'Submit to client',
+                'Schedule discussion'
+            ]
+        }, {
+            name: '🤝 Replacement Negotiation & Finalisation',
+            steps: [
+                'Review client concerns',
+                'Address replacement queries',
+                'Adjust terms if needed',
+                'Present replacement benefits',
+                'Reach agreement',
+                'Prepare replacement contract',
+                'Get necessary signatures',
+                'Plan replacement schedule',
+                'Finalize agreement'
+            ]
+        }, {
+            name: '🆓 Free Service (Post Replacement)',
+            steps: [
+                'Schedule free service visit',
+                'Check new equipment operation',
+                'Perform maintenance checks',
+                'Train client team',
+                'Document service report',
+                'Get client feedback',
+                'Update service records',
+                'Identify future opportunities',
+                'Strengthen client relationship'
+            ]
+        }, {
+            name: '🔄 AMC Strategy (Repetition from Level 12)',
+            steps: [
+                'Review existing AMC status',
+                'Analyze service performance',
+                'Identify upsell opportunities',
+                'Prepare AMC upgrade proposal',
+                'Present to client',
+                'Negotiate AMC terms',
+                'Finalize AMC agreement',
+                'Schedule AMC service',
+                'Create long-term partnership'
+            ]
+        }];
+
+        // ============================================
+        // GAME STATE - MULTI-TEAM
+        // ============================================
+
+        const MAX_TEAMS = 4;
+        const game = {
+            currentLevel: 0,
+            score: 0,
+            errors: 0,
+            timeLeft: 60,
+            maxTime: 60,
+            isPlaying: false,
+            isTimerRunning: false,
+            timer: null,
+            currentStep: 0,
+            steps: [],
+            shuffledSteps: [],
+            levelComplete: false,
+            hintCount: 0,
+            maxHints: 3,
+            maxLevels: PROCESSES.length,
+            correctClicks: 0,
+            totalSteps: 0,
+            usedHints: [],
+            activeTeam: 0,
+            teamData: Array.from({ length: MAX_TEAMS }, () => ({
+                score: 0,
+                level: 0,
+                completed: false,
+                totalCorrect: 0,
+                totalErrors: 0
+            })),
+            gameOver: false,
+            selectedOrder: [],
+            submitted: false,
+            roundStarted: false
+        };
+
+        // ============================================
+        // TEAM MANAGEMENT
+        // ============================================
+
+        function switchToTeam(teamIndex) {
+            saveTeamProgress();
+            
+            if (game.isTimerRunning) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+                game.isPlaying = false;
+            }
+            
+            game.activeTeam = teamIndex;
+            document.getElementById('teamSelector').value = teamIndex;
+
+            document.querySelectorAll('.team-btn').forEach(btn => {
+                btn.classList.remove('active-team');
+                if (parseInt(btn.dataset.team) === teamIndex) {
+                    btn.classList.add('active-team');
+                }
+            });
+
+            document.querySelectorAll('.team-score-card').forEach(card => {
+                card.classList.remove('active-team-card');
+                if (parseInt(card.dataset.team) === teamIndex) {
+                    card.classList.add('active-team-card');
+                }
+            });
+
+            loadTeamData(teamIndex);
+            
+            game.roundStarted = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = '▶ START ROUND';
+            document.getElementById('submitBtn').disabled = true;
+            
+            document.querySelectorAll('.step-item').forEach(el => {
+                el.classList.add('locked');
+                el.onclick = null;
+            });
+        }
+
+        function switchTeam() {
+            const teamIndex = parseInt(document.getElementById('teamSelector').value);
+            switchToTeam(teamIndex);
+        }
+
+        function saveTeamProgress() {
+            const team = game.activeTeam;
+            game.teamData[team].score = game.totalScore || 0;
+            game.teamData[team].level = game.currentLevel + 1;
+            game.teamData[team].totalCorrect = game.totalCorrect || 0;
+            game.teamData[team].totalErrors = game.totalErrors || 0;
+            updateTeamUI(team);
+        }
+
+        function loadTeamData(teamIndex) {
+            const team = game.teamData[teamIndex];
+            game.totalScore = team.score || 0;
+            game.currentLevel = (team.level || 1) - 1;
+            game.totalCorrect = team.totalCorrect || 0;
+            game.totalErrors = team.totalErrors || 0;
+
+            if (game.currentLevel >= game.maxLevels) {
+                game.currentLevel = game.maxLevels - 1;
+                team.level = game.maxLevels;
+            }
+
+            if (game.timer) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+            }
+
+            loadLevel(game.currentLevel);
+            updateTeamUI(teamIndex);
+            document.getElementById('totalScoreDisplay').textContent = game.totalScore;
+        }
+
+        function updateTeamUI(teamIndex) {
+            document.getElementById('teamScore' + teamIndex).textContent = game.teamData[teamIndex].score || 0;
+            document.getElementById('teamLevel' + teamIndex).textContent = game.teamData[teamIndex].level || 1;
+        }
+
+        // ============================================
+        // GAME FUNCTIONS
+        // ============================================
+
+        function loadLevel(levelIndex) {
+            if (levelIndex >= game.maxLevels) {
+                game.teamData[game.activeTeam].completed = true;
+                showGameComplete();
+                return;
+            }
+
+            const process = PROCESSES[levelIndex];
+            game.steps = process.steps;
+            game.totalSteps = process.steps.length;
+            game.currentStep = 0;
+            game.score = 0;
+            game.timeLeft = game.maxTime;
+            game.levelComplete = false;
+            game.isPlaying = false;
+            game.isTimerRunning = false;
+            game.hintCount = 0;
+            game.usedHints = [];
+            game.selectedOrder = [];
+            game.submitted = false;
+            game.roundStarted = false;
+
+            document.getElementById('processName').textContent = process.name;
+            document.getElementById('levelDisplay').textContent = levelIndex + 1;
+            document.getElementById('levelBadge').textContent = `Level ${levelIndex + 1} / ${game.maxLevels}`;
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('timer').textContent = game.timeLeft;
+            document.getElementById('timer').className = 'value timer';
+
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = '▶ START ROUND';
+
+            game.shuffledSteps = shuffle([...game.steps]);
+
+            renderSteps();
+            updateUI();
+            document.getElementById('msg').className = 'msg';
+            document.getElementById('msg').textContent = '';
+
+            document.querySelectorAll('.step-item').forEach(el => {
+                el.classList.add('locked');
+                el.onclick = null;
+            });
+
+            showMessage('👆 Press "START ROUND" to begin!', 'info');
+        }
+
+        function startRound() {
+            if (game.roundStarted) return;
+            if (game.levelComplete) return;
+            
+            game.roundStarted = true;
+            game.isPlaying = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('startBtn').textContent = '▶ IN PROGRESS...';
+            document.getElementById('submitBtn').disabled = false;
+            
+            document.querySelectorAll('.step-item').forEach(el => {
+                el.classList.remove('locked');
+                const step = el.dataset.step;
+                if (!el.classList.contains('selected') && !game.submitted) {
+                    el.onclick = () => clickStep(el, step);
+                }
+            });
+            
+            startTimer();
+            showMessage('⏱️ Timer started! Arrange the steps in correct order.', 'info');
+        }
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function renderSteps() {
+            const container = document.getElementById('stepsContainer');
+            container.innerHTML = '';
+
+            game.shuffledSteps.forEach((step, index) => {
+                const div = document.createElement('div');
+                div.className = 'step-item locked';
+                div.id = 'step-' + index;
+                div.dataset.index = index;
+                div.dataset.step = step;
+                div.dataset.selected = 'false';
+
+                const isSelected = game.selectedOrder.includes(step);
+
+                const stepNum = document.createElement('span');
+                stepNum.className = 'step-number';
+                if (isSelected) {
+                    stepNum.textContent = (game.selectedOrder.indexOf(step) + 1);
+                    div.classList.add('selected');
+                    div.dataset.selected = 'true';
+                } else {
+                    stepNum.textContent = '○';
+                }
+
+                const stepText = document.createElement('span');
+                stepText.className = 'step-text';
+                stepText.textContent = step;
+
+                const badge = document.createElement('span');
+                badge.className = 'step-badge';
+                if (isSelected) {
+                    badge.textContent = '#' + (game.selectedOrder.indexOf(step) + 1);
+                } else {
+                    badge.textContent = 'Click to select';
+                }
+
+                div.appendChild(stepNum);
+                div.appendChild(stepText);
+                div.appendChild(badge);
+
+                if (!game.submitted && game.roundStarted) {
+                    div.onclick = () => clickStep(div, step);
+                } else if (!game.roundStarted) {
+                    div.classList.add('locked');
+                    div.onclick = null;
+                } else {
+                    div.classList.add('disabled');
+                    div.onclick = null;
+                }
+
+                container.appendChild(div);
+            });
+
+            document.getElementById('score').textContent = game.selectedOrder.length;
+        }
+
+        function clickStep(element, step) {
+            if (!game.isPlaying || game.levelComplete || game.submitted) return;
+            if (element.dataset.selected === 'true') return;
+            if (!game.roundStarted) return;
+            if (element.classList.contains('locked')) return;
+
+            game.selectedOrder.push(step);
+            element.dataset.selected = 'true';
+            element.classList.add('selected');
+            element.classList.remove('locked');
+
+            const stepNum = element.querySelector('.step-number');
+            stepNum.textContent = game.selectedOrder.length;
+
+            const badge = element.querySelector('.step-badge');
+            badge.textContent = '#' + game.selectedOrder.length;
+
+            document.getElementById('score').textContent = game.selectedOrder.length;
+
+            if (game.selectedOrder.length === game.totalSteps) {
+                setTimeout(() => {
+                    submitAnswer();
+                }, 500);
+            }
+        }
+
+        function submitAnswer() {
+            if (game.submitted || game.levelComplete) return;
+            if (game.selectedOrder.length !== game.totalSteps) {
+                showMessage(`⚠️ Please select all ${game.totalSteps} steps before submitting!`, 'info');
+                return;
+            }
+
+            game.submitted = true;
+            document.getElementById('submitBtn').disabled = true;
+
+            if (game.isTimerRunning) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+                game.isPlaying = false;
+            }
+
+            document.querySelectorAll('.step-item').forEach(el => {
+                el.classList.add('disabled');
+                el.onclick = null;
+            });
+
+            let isCorrect = true;
+            for (let i = 0; i < game.selectedOrder.length; i++) {
+                if (game.selectedOrder[i] !== game.steps[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            if (isCorrect) {
+                game.score = game.totalSteps;
+                game.totalCorrect += game.totalSteps;
+                showMessage(`✅ PERFECT! All ${game.totalSteps} steps in correct order!`, 'success');
+                setTimeout(() => {
+                    completeLevel();
+                }, 1000);
+            } else {
+                game.errors++;
+                game.totalErrors++;
+                showMessage('❌ YOU MISSED YOUR OWN BUSINESS SEQUENCE! RESTARTING FROM LEVEL 1!', 'error');
+
+                setTimeout(() => {
+                    game.teamData[game.activeTeam].level = 1;
+                    game.teamData[game.activeTeam].score = 0;
+                    game.teamData[game.activeTeam].totalCorrect = 0;
+                    game.teamData[game.activeTeam].totalErrors = 0;
+                    game.totalScore = 0;
+                    game.totalCorrect = 0;
+                    game.totalErrors = 0;
+                    game.currentLevel = 0;
+                    game.roundStarted = false;
+                    document.getElementById('startBtn').disabled = false;
+                    document.getElementById('startBtn').textContent = '▶ START ROUND';
+                    document.getElementById('submitBtn').disabled = true;
+                    updateTeamUI(game.activeTeam);
+                    document.getElementById('totalScoreDisplay').textContent = '0';
+                    loadLevel(0);
+                    showMessage('🔄 Restarted from Level 1. Study the business sequence carefully!', 'info');
+                }, 2500);
+            }
+        }
+
+        function completeLevel() {
+            game.levelComplete = true;
+            game.isPlaying = false;
+            if (game.isTimerRunning) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+            }
+
+            const timeBonus = Math.max(0, game.timeLeft * 2);
+            const levelScore = Math.max(0, (game.score * 10) + timeBonus);
+            game.totalScore += levelScore;
+
+            game.teamData[game.activeTeam].score = game.totalScore;
+            game.teamData[game.activeTeam].level = game.currentLevel + 2;
+            game.teamData[game.activeTeam].totalCorrect = game.totalCorrect;
+            game.teamData[game.activeTeam].totalErrors = game.totalErrors;
+            updateTeamUI(game.activeTeam);
+            document.getElementById('totalScoreDisplay').textContent = game.totalScore;
+
+            document.getElementById('levelCompleteNum').textContent = game.currentLevel + 1;
+            document.getElementById('levelScore').textContent = game.totalSteps + '/' + game.totalSteps;
+            document.getElementById('levelTotalScore').textContent = levelScore;
+
+            document.getElementById('levelOverlay').classList.add('active');
+
+            showMessage(`🎉 Level ${game.currentLevel + 1} Complete!`, 'celebrate');
+            updateUI();
+        }
+
+        function nextLevel() {
+            document.getElementById('levelOverlay').classList.remove('active');
+            game.currentLevel++;
+            game.roundStarted = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = '▶ START ROUND';
+            document.getElementById('submitBtn').disabled = true;
+
+            if (game.currentLevel >= game.maxLevels) {
+                game.teamData[game.activeTeam].completed = true;
+                showGameComplete();
+            } else {
+                loadLevel(game.currentLevel);
+            }
+        }
+
+        function showGameComplete() {
+            let winner = 0;
+            let maxScore = 0;
+
+            for (let i = 0; i < MAX_TEAMS; i++) {
+                if (game.teamData[i].score > maxScore) {
+                    maxScore = game.teamData[i].score;
+                    winner = i;
+                }
+            }
+
+            const teamNames = ['Team A', 'Team B', 'Team C', 'Team D'];
+            const teamColors = ['🔵', '🔴', '🟢', '🟡'];
+            const winnerName = teamColors[winner] + ' ' + teamNames[winner];
+
+            document.getElementById('winnerAnnounce').textContent = '🏆 WINNER: ' + winnerName;
+            document.getElementById('winnerAnnounce').style.color = ['#3498db', '#e74c3c', '#27ae60', '#f39c12'][winner];
+
+            for (let i = 0; i < MAX_TEAMS; i++) {
+                document.getElementById('finalScore' + i).textContent = game.teamData[i].score || 0;
+            }
+
+            document.getElementById('gameCompleteOverlay').classList.add('active');
+
+            const name = prompt('🏆 Game Complete! Enter team name for leaderboard:', winnerName);
+            if (name && name.trim()) {
+                saveToLeaderboard(name.trim(), maxScore, game.maxLevels);
+            }
+        }
+
+        function closeCompleteOverlay() {
+            document.getElementById('gameCompleteOverlay').classList.remove('active');
+        }
+
+        function playAgain() {
+            document.getElementById('gameCompleteOverlay').classList.remove('active');
+            resetGame();
+        }
+
+        function showHint() {
+            if (game.hintCount >= game.maxHints) {
+                showMessage('💡 No more hints left! Think about the business process!', 'info');
+                return;
+            }
+
+            if (game.levelComplete || !game.isPlaying || game.submitted) return;
+
+            game.hintCount++;
+
+            const hintMessages = [
+                '🔍 Think about the logical flow of this business process...',
+                '📝 What comes first? What should happen before the next step?',
+                '🔄 Consider the dependencies between each step...',
+                '📊 Which step should logically follow the previous one?',
+                '🤔 What would a customer expect to happen next?',
+                '💡 Think about the natural progression of this process...',
+                '🔗 How do these steps connect to each other?',
+                '📈 What is the chronological order of this process?',
+                '🎯 Focus on the business logic, not the individual words...',
+                '🧩 Try to build the sequence like a puzzle...'
+            ];
+
+            const randomHint = hintMessages[Math.floor(Math.random() * hintMessages.length)];
+            showMessage(`💡 ${randomHint}`, 'info');
+            updateUI();
+        }
+
+        function resetLevel() {
+            if (game.isTimerRunning) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+                game.isPlaying = false;
+            }
+            document.getElementById('levelOverlay').classList.remove('active');
+            game.submitted = false;
+            game.roundStarted = false;
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = '▶ START ROUND';
+            loadLevel(game.currentLevel);
+            showMessage('🔄 Level restarted! Press START to begin.', 'info');
+        }
+
+        function resetGame() {
+            if (game.isTimerRunning) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+                game.isPlaying = false;
+            }
+
+            for (let i = 0; i < MAX_TEAMS; i++) {
+                game.teamData[i] = {
+                    score: 0,
+                    level: 0,
+                    completed: false,
+                    totalCorrect: 0,
+                    totalErrors: 0
+                };
+                updateTeamUI(i);
+            }
+
+            game.currentLevel = 0;
+            game.totalScore = 0;
+            game.totalCorrect = 0;
+            game.totalErrors = 0;
+            game.activeTeam = 0;
+            game.gameOver = false;
+            game.submitted = false;
+            game.roundStarted = false;
+
+            document.getElementById('levelOverlay').classList.remove('active');
+            document.getElementById('gameCompleteOverlay').classList.remove('active');
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = '▶ START ROUND';
+            document.getElementById('totalScoreDisplay').textContent = '0';
+
+            document.querySelectorAll('.team-btn').forEach(btn => {
+                btn.classList.remove('active-team');
+                if (parseInt(btn.dataset.team) === 0) {
+                    btn.classList.add('active-team');
+                }
+            });
+
+            document.querySelectorAll('.team-score-card').forEach(card => {
+                card.classList.remove('active-team-card');
+                if (parseInt(card.dataset.team) === 0) {
+                    card.classList.add('active-team-card');
+                }
+            });
+
+            document.getElementById('teamSelector').value = 0;
+
+            loadLevel(0);
+            showMessage('🔄 New game started! Press START to begin.', 'info');
+        }
+
+        function startTimer() {
+            if (game.isTimerRunning) {
+                clearInterval(game.timer);
+                game.timer = null;
+                game.isTimerRunning = false;
+            }
+
+            game.isTimerRunning = true;
+            game.timer = setInterval(() => {
+                game.timeLeft--;
+                updateUI();
+
+                const timerEl = document.getElementById('timer');
+                if (game.timeLeft <= 5) {
+                    timerEl.className = 'value timer danger';
+                } else if (game.timeLeft <= 15) {
+                    timerEl.className = 'value timer warning';
+                }
+
+                if (game.timeLeft <= 0) {
+                    clearInterval(game.timer);
+                    game.timer = null;
+                    game.isTimerRunning = false;
+                    game.isPlaying = false;
+                    
+                    document.querySelectorAll('.step-item').forEach(el => {
+                        el.classList.add('locked');
+                        el.classList.add('disabled');
+                        el.onclick = null;
+                    });
+                    document.getElementById('submitBtn').disabled = true;
+                    
+                    showMessage('⏰ Time is up! Restarting from Level 1!', 'error');
+                    setTimeout(() => {
+                        game.teamData[game.activeTeam].level = 1;
+                        game.teamData[game.activeTeam].score = 0;
+                        game.teamData[game.activeTeam].totalCorrect = 0;
+                        game.teamData[game.activeTeam].totalErrors = 0;
+                        game.totalScore = 0;
+                        game.totalCorrect = 0;
+                        game.totalErrors = 0;
+                        game.currentLevel = 0;
+                        game.submitted = false;
+                        game.roundStarted = false;
+                        document.getElementById('submitBtn').disabled = true;
+                        document.getElementById('startBtn').disabled = false;
+                        document.getElementById('startBtn').textContent = '▶ START ROUND';
+                        document.getElementById('totalScoreDisplay').textContent = '0';
+                        updateTeamUI(game.activeTeam);
+                        loadLevel(0);
+                        showMessage('🔄 Time up! Restarted from Level 1. Press START to begin.', 'info');
+                    }, 1500);
+                }
+            }, 1000);
+        }
+
+        function updateUI() {
+            document.getElementById('timer').textContent = game.timeLeft;
+            document.getElementById('score').textContent = game.selectedOrder.length;
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('msg');
+            msg.textContent = text;
+            msg.className = 'msg ' + type;
+
+            if (type === 'info' || type === 'success') {
+                setTimeout(() => {
+                    if (msg.className === 'msg ' + type) {
+                        msg.className = 'msg';
+                        msg.textContent = '';
+                    }
+                }, 3000);
+            }
+        }
+
+        // ============================================
+        // LEADERBOARD
+        // ============================================
+
+        function getLeaderboard() {
+            try {
+                return JSON.parse(localStorage.getItem('srmTeamPipelineLeaderboard')) || [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveToLeaderboard(name, score, level) {
+            let board = getLeaderboard();
+            board.push({ name, score, level, date: new Date().toLocaleString() });
+            board.sort((a, b) => b.score - a.score);
+            board = board.slice(0, 10);
+            localStorage.setItem('srmTeamPipelineLeaderboard', JSON.stringify(board));
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'h' || e.key === 'H') {
+                showHint();
+            }
+            if (e.key === 's' || e.key === 'S') {
+                if (!game.roundStarted && !game.levelComplete) {
+                    startRound();
+                }
+            }
+            if (e.key === 'Enter') {
+                if (document.getElementById('levelOverlay').classList.contains('active')) {
+                    if (game.currentLevel + 1 < game.maxLevels) {
+                        nextLevel();
+                    }
+                }
+                if (document.getElementById('gameCompleteOverlay').classList.contains('active')) {
+                    closeCompleteOverlay();
+                }
+                if (!game.submitted && game.selectedOrder.length === game.totalSteps && game.roundStarted) {
+                    submitAnswer();
+                }
+            }
+            if (e.key === 'Escape') {
+                document.getElementById('levelOverlay').classList.remove('active');
+                document.getElementById('gameCompleteOverlay').classList.remove('active');
+            }
+        });
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+
+        window.onload = function() {
+            document.querySelector('.team-btn.team-a').classList.add('active-team');
+            document.querySelector('.team-score-card[data-team="0"]').classList.add('active-team-card');
+
+            for (let i = 0; i < MAX_TEAMS; i++) {
+                updateTeamUI(i);
+            }
+
+            loadLevel(0);
+        };
+    </script>
+
+</body>
+</html>
