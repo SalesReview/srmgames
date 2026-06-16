@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Sequence Challenge - Sales Review Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 NUMBER SEQUENCE CHALLENGE</h1>
+        <div class="sub">
+            <strong>PROPERTY OF SRM (SALES REVIEW MANAGEMENT)</strong> - Employees Only<br>
+            Click numbers in sequence 1, 2, 3... within 60 seconds!
+        </div>
+
+        <div id="login" class="input-area">
+            <input type="text" id="playerName" placeholder="Enter your name" maxlength="30">
+            <button class="btn btn-primary" onclick="startGame()">🚀 Start Game</button>
+            <br><br>
+            <small style="color:#888;">* Scores shown only during this session</small>
+        </div>
+
+        <div id="gameArea" style="display:none">
+            <div class="stats">
+                <div class="stat">
+                    <h3>⏱️ Time Left</h3>
+                    <div class="val timer" id="timer">60</div>
+                </div>
+                <div class="stat">
+                    <h3>🎯 Score</h3>
+                    <div class="val" id="score">0</div>
+                </div>
+                <div class="stat">
+                    <h3>👤 Player</h3>
+                    <div class="val" id="playerDisplay" style="font-size:20px;">-</div>
+                </div>
+                <div class="stat">
+                    <h3>📊 Best</h3>
+                    <div class="val" id="sessionBest">0</div>
+                </div>
+            </div>
+
+            <div style="text-align:center;margin:10px 0">
+                <button class="btn btn-danger" onclick="resetGame()">🔄 Restart Game</button>
+            </div>
+
+            <div id="grid"></div>
+            <div id="msg" class="msg"></div>
+            
+            <div class="highlight">
+                <strong>🏆 Session Best: <span id="sessionBestDisplay">0</span></strong>
+                <br>
+                <small style="color:#888;">(Resets when page is refreshed)</small>
+            </div>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ • Scores reset on refresh • <span>Sales Review Management</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
