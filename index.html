@@ -18,16 +18,8 @@
             </div>
         </div>
 
-        <!-- LOGIN -->
-        <div id="login" class="input-area">
-            <input type="text" id="playerName" placeholder="Enter your name" maxlength="30" autofocus>
-            <button class="btn btn-primary" onclick="startGame()">🚀 Start Game</button>
-            <br>
-            <small>* Scores saved to local leaderboard • 3 restarts allowed</small>
-        </div>
-
         <!-- GAME AREA -->
-        <div id="gameArea" style="display:none; flex:1; display:none; flex-direction:column; min-height:0;">
+        <div id="gameArea" style="display:flex; flex:1; flex-direction:column; min-height:0;">
             <!-- STATS -->
             <div class="stats">
                 <div class="stat">
@@ -40,7 +32,7 @@
                 </div>
                 <div class="stat">
                     <h3>👤 Player</h3>
-                    <div class="val" id="playerDisplay" style="font-size:clamp(14px,1.2vw,20px);">-</div>
+                    <div class="val" id="playerDisplay" style="font-size:clamp(14px,1.2vw,20px);">Guest</div>
                 </div>
                 <div class="stat">
                     <h3>📊 Best</h3>
