@@ -23,7 +23,6 @@
             margin: 0 auto;
         }
 
-        /* HEADER */
         .header {
             text-align: center;
             padding: 30px 20px;
@@ -55,7 +54,6 @@
             margin-top: 4px;
         }
 
-        /* NAVIGATION */
         .nav-bar {
             display: flex;
             gap: 15px;
@@ -88,7 +86,6 @@
             color: #1a1a2e;
         }
 
-        /* GAMES GRID */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -190,7 +187,6 @@
             box-shadow: none;
         }
 
-        /* GAME CARD COLORS */
         .game-card.g1 { border-left: 4px solid #e74c3c; }
         .game-card.g2 { border-left: 4px solid #3498db; }
         .game-card.g3 { border-left: 4px solid #2ecc71; }
@@ -202,7 +198,6 @@
         .game-card.g9 { border-left: 4px solid #c0392b; }
         .game-card.g10 { border-left: 4px solid #16a085; }
 
-        /* FOOTER */
         .footer {
             text-align: center;
             padding: 20px;
@@ -216,7 +211,6 @@
             color: #f39c12;
         }
 
-        /* SCROLLBAR */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -239,20 +233,17 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <div class="header">
             <h1>🏢 SRM <span>GAMES HUB</span></h1>
             <p>Learn Business Processes Through Interactive Games</p>
             <div class="sub">10 Games to Master the Complete Business Pipeline</div>
         </div>
 
-        <!-- NAVIGATION -->
         <div class="nav-bar">
             <a href="index.html" class="active">🏠 Home</a>
             <a href="about.html">ℹ️ About</a>
         </div>
 
-        <!-- GAMES GRID -->
         <div class="games-grid">
             <!-- GAME 1: Business Pipeline -->
             <div class="game-card g1">
@@ -260,24 +251,24 @@
                 <span class="badge ready">✅ Ready</span>
                 <h3>Business Pipeline</h3>
                 <p>Arrange 21 business process levels in correct sequence. 9 steps per level. 4 teams can compete!</p>
-                <a href="Pipeline/" class="btn-play">▶ Play Now</a>
+                <a href="srm-games/Pipeline/" class="btn-play">▶ Play Now</a>
             </div>
 
-            <!-- GAME 2: Lead Generation -->
+            <!-- GAME 2: Number Concentration -->
             <div class="game-card g2">
                 <div class="icon">🎯</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Lead Generation</h3>
-                <p>Master the art of finding and qualifying business leads through interactive scenarios.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
+                <span class="badge ready">✅ Ready</span>
+                <h3>Number Concentration</h3>
+                <p>Find and click numbers 1-100 in sequence within 60 seconds. Test your focus and speed!</p>
+                <a href="srm-games/Numbergame/" class="btn-play">▶ Play Now</a>
             </div>
 
-            <!-- GAME 3: Sales Pipeline -->
+            <!-- GAME 3: Lead Generation -->
             <div class="game-card g3">
                 <div class="icon">📊</div>
                 <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Sales Pipeline</h3>
-                <p>Learn the complete sales process from prospecting to closing deals.</p>
+                <h3>Lead Generation</h3>
+                <p>Master the art of finding and qualifying business leads through interactive scenarios.</p>
                 <button class="btn-play disabled">⏳ Coming Soon</button>
             </div>
 
@@ -345,7 +336,6 @@
             </div>
         </div>
 
-        <!-- FOOTER -->
         <div class="footer">
             Made with ❤️ • <span>SRM Business Games</span> • 10 Games • v2.0
         </div>
