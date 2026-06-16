@@ -8,7 +8,7 @@ const game = {
     timeLeft: 60,
     isPlaying: false,
     timer: null,
-    playerName: '',
+    playerName: 'Guest',
     found: new Set(),
     gameEnded: false,
     sessionBest: 0,
@@ -109,29 +109,13 @@ function renderGrid() {
 // ============================================
 
 function startGame() {
-    const nameInput = document.getElementById('playerName');
-    const name = nameInput.value.trim();
-
-    if (!name) {
-        alert('⚠️ Please enter your name!');
-        nameInput.focus();
-        return;
-    }
-
-    game.playerName = name;
+    game.playerName = 'Guest';
     game.passwordVerified = false;
     game.gridUnlocked = false;
     game.restartCount = 0;
 
-    document.getElementById('playerDisplay').textContent = name;
-    document.getElementById('login').style.display = 'none';
+    document.getElementById('playerDisplay').textContent = 'Guest';
     document.getElementById('restartCountDisplay').textContent = '🔄 Restarts: 0/' + game.maxRestarts;
-    
-    const gameArea = document.getElementById('gameArea');
-    gameArea.style.display = 'flex';
-    gameArea.style.flexDirection = 'column';
-    gameArea.style.flex = '1';
-    gameArea.style.minHeight = '0';
 
     document.getElementById('masterGrid').classList.remove('show-grid');
     updateRestartUI();
@@ -290,14 +274,14 @@ function endGame(won) {
     }
 
     if (game.score > 0) {
-        saveToLeaderboard(game.playerName, game.score);
+        saveToLeaderboard('Guest', game.score);
     }
 
     if (won) {
-        showMessage(`🎉🎊 PERFECT! ${game.playerName} found all 100 numbers! 🎊🎉`, 'celebrate');
+        showMessage(`🎉🎊 PERFECT! Guest found all 100 numbers! 🎊🎉`, 'celebrate');
         celebrateWin();
     } else {
-        showMessage(`⏰ Time up! ${game.playerName}, you found ${game.score} numbers.`, 'fail');
+        showMessage(`⏰ Time up! Guest, you found ${game.score} numbers.`, 'fail');
     }
 
     updateUI();
@@ -312,7 +296,7 @@ function endGame(won) {
 // ============================================
 
 function showPasswordPrompt() {
-    document.getElementById('finalName').textContent = '👤 ' + game.playerName;
+    document.getElementById('finalName').textContent = '👤 Guest';
     document.getElementById('finalScore').textContent = '🎯 Score: ' + game.score + ' / 100';
     document.getElementById('passwordInput').value = '';
     document.getElementById('passwordError').classList.remove('show');
@@ -478,9 +462,6 @@ function celebrateWin() {
 // ============================================
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && document.getElementById('login').style.display !== 'none') {
-        startGame();
-    }
     if ((e.key === 'r' || e.key === 'R') &&
         document.getElementById('gameArea').style.display === 'flex' &&
         !document.getElementById('passwordOverlay').classList.contains('active')) {
@@ -501,6 +482,6 @@ window.onload = function() {
     renderGrid();
     document.getElementById('sessionBest').textContent = '0';
     displayLeaderboard();
-    document.getElementById('playerName').focus();
     updateRestartUI();
+    startGame();
 };
