@@ -3,1204 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Concentration Game - SRM</title>
+    <title>SRM Games - Home</title>
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* ============================================
-           RESET & FULL PAGE - NO EMPTY SPACE
-           ============================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            overflow: hidden;
-        }
-
-        .game-wrapper {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-            padding: 5px 10px;
-        }
-
-        /* ============================================
-           HEADER - COMPACT
-           ============================================ */
-        .header {
+        .hero {
             text-align: center;
-            flex-shrink: 0;
-            padding: 2px 0;
+            padding: 40px 20px;
         }
-
-        .header h1 {
-            color: #f39c12;
-            font-size: clamp(16px, 2.5vw, 26px);
-            text-shadow: 0 0 30px rgba(243, 156, 18, 0.3);
-            letter-spacing: 1px;
-            line-height: 1.2;
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 48px);
+            color: #2c3e50;
         }
-
-        .header .sub {
-            color: #aaa;
-            font-size: clamp(9px, 1vw, 13px);
-            line-height: 1.4;
-            padding: 1px 0;
-        }
-
-        .header .sub strong {
+        .hero h1 span {
             color: #e74c3c;
         }
-
-        /* ============================================
-           BUTTONS
-           ============================================ */
-        .btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: clamp(12px, 1vw, 15px);
+        .hero p {
+            font-size: clamp(16px, 1.5vw, 22px);
+            color: #555;
+            margin: 15px 0;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .game-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
             transition: all 0.3s;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
         }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: #fff;
-            padding: 5px 16px;
-            font-size: clamp(11px, 0.9vw, 13px);
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+            border-color: #3498db;
         }
-        .btn-danger:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 5px 30px rgba(231, 76, 60, 0.4);
+        .game-card .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
         }
-        .btn-danger:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none !important;
+        .game-card h3 {
+            color: #2c3e50;
+            font-size: clamp(18px, 1.5vw, 24px);
         }
-
-        .btn-success {
+        .game-card p {
+            color: #666;
+            font-size: clamp(13px, 1vw, 16px);
+            margin: 10px 0;
+        }
+        .game-card .btn-play {
+            display: inline-block;
+            padding: 10px 30px;
             background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: #fff;
-            padding: 8px 25px;
-            font-size: clamp(12px, 1vw, 14px);
-        }
-        .btn-success:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 30px rgba(46, 204, 113, 0.4);
-        }
-
-        /* ============================================
-           STATS - COMPACT
-           ============================================ */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-            flex-shrink: 0;
-            padding: 3px 0;
-        }
-
-        .stat {
-            text-align: center;
-            padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.05);
+            border: none;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .stat h3 {
-            font-size: clamp(7px, 0.7vw, 10px);
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat .val {
-            font-size: clamp(18px, 2.2vw, 28px);
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .stat .val.timer {
-            color: #e74c3c;
-        }
-        .stat .val.timer.warning {
-            color: #f39c12;
-        }
-        .stat .val.timer.danger {
-            color: #e74c3c;
-            animation: pulse 0.5s ease-in-out infinite;
-        }
-
-        .controls {
-            text-align: center;
-            flex-shrink: 0;
-            padding: 2px 0;
-        }
-
-        /* ============================================
-           MASTER GRID - 3x3 - NO GAPS
-           ============================================ */
-        #masterGrid {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 0;
-            padding: 0;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 6px;
-            min-height: 0;
-            position: relative;
-            margin: 2px 0;
-            border: 2px solid transparent;
-            transition: border 0.5s ease;
-            overflow: hidden;
-        }
-
-        #masterGrid.show-grid {
-            border-color: rgba(243, 156, 18, 0.5);
-        }
-
-        .grid-cell {
-            display: flex;
-            flex-wrap: wrap;
-            align-content: center;
-            justify-content: center;
-            padding: 0;
-            position: relative;
-            border: 2px solid transparent;
-            transition: border 0.5s ease;
-            min-height: 0;
-            background: rgba(255, 255, 255, 0.01);
-            gap: 1px;
-            flex: 1;
-        }
-
-        #masterGrid.show-grid .grid-cell {
-            border-color: rgba(243, 156, 18, 0.2);
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .cell-label {
-            position: absolute;
-            top: 1px;
-            left: 4px;
-            font-size: 8px;
-            color: rgba(243, 156, 18, 0.15);
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-            letter-spacing: 1px;
-        }
-
-        #masterGrid.show-grid .cell-label {
-            opacity: 1;
-        }
-
-        /* ============================================
-           NUMBER CIRCLES - NO GAPS
-           ============================================ */
-        .num {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
+            font-size: clamp(14px, 1.1vw, 18px);
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            flex-shrink: 0;
-            margin: 0.5px;
-            position: relative;
-        }
-
-        .num.size-xs {
-            width: 34px;
-            height: 34px;
-            font-size: 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-        .num.size-sm {
-            width: 42px;
-            height: 42px;
-            font-size: 15px;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-        }
-        .num.size-md {
-            width: 50px;
-            height: 50px;
-            font-size: 18px;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
-        .num.size-lg {
-            width: 58px;
-            height: 58px;
-            font-size: 21px;
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-        }
-        .num.size-xl {
-            width: 66px;
-            height: 66px;
-            font-size: 24px;
-            background: linear-gradient(135deg, #fa709a, #fee140);
-        }
-        .num.size-xxl {
-            width: 74px;
-            height: 74px;
-            font-size: 27px;
-            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-        }
-
-        .num:hover:not(.found):not(.disabled) {
-            transform: scale(1.12);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
-            z-index: 10;
-        }
-
-        .num.found {
-            background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
-            opacity: 0.4;
-            cursor: default;
-            transform: scale(0.85);
-            box-shadow: none !important;
-        }
-
-        .num.wrong {
-            animation: shakeFlash 0.4s;
-            box-shadow: 0 0 40px rgba(231, 76, 60, 0.8) !important;
-        }
-
-        .num.current {
-            animation: glowPulse 0.8s ease-in-out infinite;
-            box-shadow: 0 0 30px rgba(243, 156, 18, 0.6) !important;
-            transform: scale(1.08);
-            border: 2px solid #f39c12;
-        }
-
-        .num.disabled {
-            cursor: not-allowed;
-            opacity: 0.2;
-        }
-        .num.disabled:hover {
-            transform: none !important;
-        }
-
-        /* ============================================
-           ANIMATIONS
-           ============================================ */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        @keyframes shakeFlash {
-            0% { transform: translateX(0); background: #e74c3c !important; }
-            20% { transform: translateX(-6px) rotate(-2deg); }
-            40% { transform: translateX(6px) rotate(2deg); }
-            60% { transform: translateX(-4px); }
-            80% { transform: translateX(4px); }
-            100% { transform: translateX(0); }
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(243, 156, 18, 0.3); transform: scale(1.05); }
-            50% { box-shadow: 0 0 50px rgba(243, 156, 18, 0.7), 0 0 80px rgba(243, 156, 18, 0.2); transform: scale(1.12); }
-        }
-
-        @keyframes confettiFall {
-            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* ============================================
-           MESSAGES
-           ============================================ */
-        .msg {
-            text-align: center;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-weight: bold;
-            display: none;
-            margin: 2px 0;
-            font-size: clamp(12px, 1vw, 16px);
-            flex-shrink: 0;
-        }
-
-        .msg.success {
-            display: block;
-            background: rgba(46, 204, 113, 0.15);
-            color: #2ecc71;
-            border: 1px solid rgba(46, 204, 113, 0.2);
-        }
-
-        .msg.fail {
-            display: block;
-            background: rgba(231, 76, 60, 0.15);
-            color: #e74c3c;
-            border: 1px solid rgba(231, 76, 60, 0.2);
-        }
-
-        .msg.info {
-            display: block;
-            background: rgba(52, 152, 219, 0.15);
-            color: #3498db;
-            border: 1px solid rgba(52, 152, 219, 0.2);
-        }
-
-        .msg.celebrate {
-            display: block;
-            background: rgba(243, 156, 18, 0.15);
-            color: #f39c12;
-            font-size: clamp(16px, 1.8vw, 22px);
-            border: 2px solid rgba(243, 156, 18, 0.2);
-            text-shadow: 0 0 30px rgba(243, 156, 18, 0.3);
-        }
-
-        /* ============================================
-           PASSWORD OVERLAY
-           ============================================ */
-        #passwordOverlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-
-        #passwordOverlay.active {
-            display: flex;
-        }
-
-        .password-box {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 35px 40px;
-            border-radius: 20px;
-            border: 2px solid rgba(243, 156, 18, 0.3);
-            text-align: center;
-            max-width: 420px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-
-        .password-box h2 {
-            color: #f39c12;
-            font-size: clamp(18px, 2.2vw, 26px);
-            margin-bottom: 8px;
-        }
-
-        .password-box p {
-            color: #aaa;
-            font-size: clamp(12px, 1vw, 15px);
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .password-box .final-score {
-            color: #2ecc71;
-            font-size: clamp(22px, 2.8vw, 34px);
-            font-weight: bold;
-            margin: 8px 0;
-        }
-
-        .password-box .final-name {
-            color: #fff;
-            font-size: clamp(16px, 1.8vw, 22px);
-            margin: 4px 0;
-        }
-
-        .password-box input {
-            padding: 10px 16px;
-            width: 100%;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            font-size: clamp(13px, 1.1vw, 17px);
-            background: rgba(255, 255, 255, 0.9);
-            text-align: center;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
+            text-decoration: none;
             transition: all 0.3s;
         }
-
-        .password-box input:focus {
-            outline: none;
-            border-color: #f39c12;
-            box-shadow: 0 0 30px rgba(243, 156, 18, 0.2);
+        .game-card .btn-play:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(46, 204, 113, 0.4);
         }
-
-        .password-box .error-msg {
-            color: #e74c3c;
-            font-size: 13px;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .password-box .error-msg.show {
-            display: block;
-        }
-
-        /* ============================================
-           LEADERBOARD
-           ============================================ */
-        .leaderboard-section {
-            flex-shrink: 0;
-            margin-top: 3px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            padding: 4px 10px;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-
-        .leaderboard-section h3 {
-            color: #f39c12;
-            font-size: clamp(10px, 0.8vw, 14px);
-            text-align: center;
-            margin-bottom: 3px;
-        }
-
-        .lb-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 8px;
-            margin: 1px 0;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 4px;
-            font-size: clamp(10px, 0.8vw, 13px);
-            color: #ccc;
-        }
-
-        .lb-item .rank {
-            color: #f39c12;
-            font-weight: bold;
-            min-width: 28px;
-        }
-        .lb-item .name {
-            flex: 1;
-            margin: 0 8px;
-        }
-        .lb-item .score {
-            color: #2ecc71;
-            font-weight: bold;
-        }
-        .lb-item.top1 {
-            background: rgba(243, 156, 18, 0.12);
-            border-left: 3px solid #f39c12;
-        }
-        .lb-item.top2 {
-            background: rgba(192, 192, 192, 0.08);
-            border-left: 3px solid #bdc3c7;
-        }
-        .lb-item.top3 {
-            background: rgba(205, 127, 50, 0.08);
-            border-left: 3px solid #cd7f32;
-        }
-
-        .no-scores {
-            text-align: center;
-            color: #666;
-            font-size: clamp(10px, 0.8vw, 13px);
-            padding: 6px 0;
-        }
-
-        /* ============================================
-           FOOTER
-           ============================================ */
         .footer {
             text-align: center;
-            padding: 2px 0;
-            color: #555;
-            font-size: clamp(9px, 0.7vw, 11px);
-            flex-shrink: 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            margin-top: 2px;
+            padding: 20px;
+            color: #888;
+            border-top: 1px solid #e9ecef;
+            margin-top: 20px;
         }
-
-        .footer span {
-            color: #f39c12;
+        .nav-bar {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 10px 0;
+            flex-wrap: wrap;
         }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 1024px) {
-            .num.size-xs { width: 30px; height: 30px; font-size: 10px; }
-            .num.size-sm { width: 36px; height: 36px; font-size: 12px; }
-            .num.size-md { width: 44px; height: 44px; font-size: 15px; }
-            .num.size-lg { width: 50px; height: 50px; font-size: 17px; }
-            .num.size-xl { width: 56px; height: 56px; font-size: 19px; }
-            .num.size-xxl { width: 62px; height: 62px; font-size: 21px; }
-            .grid-cell { gap: 1px; }
+        .nav-bar a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
         }
-
-        @media (max-width: 768px) {
-            .game-wrapper { padding: 4px 6px; }
-            .header h1 { font-size: clamp(14px, 2vw, 18px); }
-            .header .sub { font-size: 8px; }
-            .stats { grid-template-columns: repeat(4, 1fr); gap: 3px; }
-            .stat .val { font-size: clamp(14px, 1.8vw, 18px); }
-            .stat { padding: 3px 6px; }
-            .stat h3 { font-size: 6px; }
-            
-            .num.size-xs { width: 26px; height: 26px; font-size: 9px; }
-            .num.size-sm { width: 32px; height: 32px; font-size: 11px; }
-            .num.size-md { width: 38px; height: 38px; font-size: 13px; }
-            .num.size-lg { width: 44px; height: 44px; font-size: 15px; }
-            .num.size-xl { width: 50px; height: 50px; font-size: 17px; }
-            .num.size-xxl { width: 56px; height: 56px; font-size: 19px; }
-            .grid-cell { gap: 1px; }
-            #masterGrid { min-height: 200px; }
-            .password-box { padding: 20px 16px; }
-            .leaderboard-section { max-height: 80px; padding: 3px 6px; }
+        .nav-bar a:hover {
+            background: #f0f0f0;
         }
-
-        @media (max-width: 480px) {
-            .game-wrapper { padding: 2px 4px; }
-            .header h1 { font-size: clamp(11px, 1.8vw, 15px); }
-            .header .sub { font-size: 7px; line-height: 1.3; }
-            .stats { grid-template-columns: repeat(2, 1fr); gap: 2px; }
-            .stat { padding: 2px 4px; }
-            .stat .val { font-size: clamp(12px, 1.6vw, 16px); }
-            .stat h3 { font-size: 6px; letter-spacing: 0.5px; }
-            
-            .num.size-xs { width: 20px; height: 20px; font-size: 7px; }
-            .num.size-sm { width: 24px; height: 24px; font-size: 8px; }
-            .num.size-md { width: 30px; height: 30px; font-size: 10px; }
-            .num.size-lg { width: 36px; height: 36px; font-size: 12px; }
-            .num.size-xl { width: 42px; height: 42px; font-size: 14px; }
-            .num.size-xxl { width: 48px; height: 48px; font-size: 16px; }
-            .grid-cell { gap: 0.5px; }
-            #masterGrid { min-height: 150px; border-radius: 4px; }
-            .btn { padding: 5px 12px; font-size: 10px; }
-            .password-box { padding: 15px 12px; }
-            .password-box h2 { font-size: 16px; }
-            .password-box input { font-size: 13px; padding: 6px 12px; }
-            .leaderboard-section { max-height: 60px; padding: 2px 4px; }
-            .lb-item { font-size: 8px; padding: 1px 4px; }
-            .msg { font-size: 11px; padding: 3px 6px; }
-            .msg.celebrate { font-size: 13px; }
-            .footer { font-size: 7px; }
-        }
-
-        @media (max-width: 360px) {
-            .num.size-xs { width: 16px; height: 16px; font-size: 6px; }
-            .num.size-sm { width: 20px; height: 20px; font-size: 7px; }
-            .num.size-md { width: 24px; height: 24px; font-size: 8px; }
-            .num.size-lg { width: 28px; height: 28px; font-size: 9px; }
-            .num.size-xl { width: 34px; height: 34px; font-size: 11px; }
-            .num.size-xxl { width: 40px; height: 40px; font-size: 13px; }
-            .grid-cell { gap: 0px; }
-            #masterGrid { min-height: 120px; }
-            .stat .val { font-size: 11px; }
-            .header h1 { font-size: 10px; }
+        .nav-bar a.active {
+            background: #3498db;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="game-wrapper">
-        <!-- HEADER -->
-        <div class="header">
-            <h1>🎯 NUMBER CONCENTRATION</h1>
-            <div class="sub">
-                <strong>PROPERTY OF SRM (SALES REVIEW MANAGEMENT)</strong> - Employees Only<br>
-                Click numbers in sequence 1 → 100 within 60 seconds!
-                <span id="restartCountDisplay" style="color:#f39c12;margin-left:10px;">🔄 Restarts: 0/3</span>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav-bar">
+            <a href="index.html" class="active">🏠 Home</a>
+            <a href="game/index.html">🎯 Business Pipeline</a>
+            <a href="about.html">ℹ️ About</a>
+        </nav>
+
+        <!-- Hero -->
+        <div class="hero">
+            <h1>🏢 SRM <span>GAMES</span></h1>
+            <p>Learn business processes through interactive games</p>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="icon">🔗</div>
+                <h3>Business Pipeline</h3>
+                <p>Arrange business process steps in the correct order across 21 levels.</p>
+                <a href="game/index.html" class="btn-play">▶ Play Now</a>
+            </div>
+            
+            <div class="game-card">
+                <div class="icon">🎯</div>
+                <h3>Coming Soon</h3>
+                <p>More games to help you master business processes.</p>
+                <button class="btn-play" style="background:#95a5a6;cursor:not-allowed;">⏳ Coming Soon</button>
+            </div>
+            
+            <div class="game-card">
+                <div class="icon">📊</div>
+                <h3>Coming Soon</h3>
+                <p>More games to help you master business processes.</p>
+                <button class="btn-play" style="background:#95a5a6;cursor:not-allowed;">⏳ Coming Soon</button>
             </div>
         </div>
 
-        <!-- GAME AREA -->
-        <div id="gameArea" style="display:flex; flex:1; flex-direction:column; min-height:0;">
-            <!-- STATS -->
-            <div class="stats">
-                <div class="stat">
-                    <h3>⏱️ Time Left</h3>
-                    <div class="val timer" id="timer">60</div>
-                </div>
-                <div class="stat">
-                    <h3>🎯 Score</h3>
-                    <div class="val" id="score">0</div>
-                </div>
-                <div class="stat">
-                    <h3>👤 Player</h3>
-                    <div class="val" id="playerDisplay" style="font-size:clamp(14px,1.2vw,20px);">Guest</div>
-                </div>
-                <div class="stat">
-                    <h3>📊 Best</h3>
-                    <div class="val" id="sessionBest">0</div>
-                </div>
-            </div>
-
-            <!-- CONTROLS -->
-            <div class="controls">
-                <button class="btn btn-danger" id="restartBtn" onclick="resetGame()">🔄 Restart (<span id="restartsLeft">3</span> left)</button>
-            </div>
-
-            <!-- 3x3 MASTER GRID -->
-            <div id="masterGrid">
-                <div class="grid-cell" id="cell-0"><span class="cell-label">Cell 1</span></div>
-                <div class="grid-cell" id="cell-1"><span class="cell-label">Cell 2</span></div>
-                <div class="grid-cell" id="cell-2"><span class="cell-label">Cell 3</span></div>
-                <div class="grid-cell" id="cell-3"><span class="cell-label">Cell 4</span></div>
-                <div class="grid-cell" id="cell-4"><span class="cell-label">Cell 5</span></div>
-                <div class="grid-cell" id="cell-5"><span class="cell-label">Cell 6</span></div>
-                <div class="grid-cell" id="cell-6"><span class="cell-label">Cell 7</span></div>
-                <div class="grid-cell" id="cell-7"><span class="cell-label">Cell 8</span></div>
-                <div class="grid-cell" id="cell-8"><span class="cell-label">Cell 9</span></div>
-            </div>
-
-            <!-- MESSAGE -->
-            <div id="msg" class="msg"></div>
-
-            <!-- LEADERBOARD -->
-            <div class="leaderboard-section" id="leaderboardSection">
-                <h3>🏆 TOP 10 LEADERBOARD</h3>
-                <div id="leaderboardList"></div>
-            </div>
-        </div>
-
-        <!-- PASSWORD OVERLAY -->
-        <div id="passwordOverlay">
-            <div class="password-box">
-                <h2>🔐 ENTER PASSWORD</h2>
-                <div class="final-name" id="finalName">Guest</div>
-                <div class="final-score" id="finalScore">Score: 0</div>
-                <p>Enter the password to reveal the 3×3 grid structure</p>
-                <input type="password" id="passwordInput" placeholder="Enter password" maxlength="20">
-                <button class="btn btn-success" onclick="verifyPassword()">✅ Unlock Grid</button>
-                <div class="error-msg" id="passwordError">❌ Incorrect password. Try again.</div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
+        <!-- Footer -->
         <div class="footer">
-            Made with ❤️ • <span>Sales Review Management</span> • v2.0
+            Made with ❤️ • SRM Business Games • v1.0
         </div>
     </div>
-
-    <script>
-        // ============================================
-        // GAME STATE
-        // ============================================
-
-        const game = {
-            currentNum: 1,
-            score: 0,
-            timeLeft: 60,
-            isPlaying: false,
-            timer: null,
-            playerName: 'Guest',
-            found: new Set(),
-            gameEnded: false,
-            sessionBest: 0,
-            passwordVerified: false,
-            gridUnlocked: false,
-            restartCount: 0,
-            maxRestarts: 3
-        };
-
-        const SIZE_CLASSES = ['size-xs', 'size-sm', 'size-md', 'size-lg', 'size-xl', 'size-xxl'];
-        const CELLS = 9;
-        const TOTAL_NUMBERS = 100;
-        const PASSWORD = 'Srm@123';
-
-        // ============================================
-        // YOUR COMPLETE GRID LAYOUT (1-100 ONCE)
-        // ============================================
-
-        const BASE_GRID_LAYOUT = [
-            // Cell 1: Top-Left
-            [1, 46, 19, 91, 100, 10, 55, 64, 73, 82, 28, 37],
-            // Cell 2: Top-Center
-            [2, 83, 20, 29, 92, 47, 56, 65, 74, 11, 38],
-            // Cell 3: Top-Right
-            [3, 12, 21, 30, 39, 48, 57, 66, 75, 84, 93],
-            // Cell 4: Middle-Left
-            [94, 31, 22, 13, 40, 49, 85, 67, 76, 58, 4],
-            // Cell 5: Middle-Center
-            [77, 14, 41, 32, 23, 50, 59, 68, 5, 86, 95],
-            // Cell 6: Middle-Right
-            [78, 15, 42, 33, 24, 51, 60, 96, 6, 87, 69],
-            // Cell 7: Bottom-Left
-            [79, 25, 88, 34, 97, 52, 61, 70, 7, 16, 43],
-            // Cell 8: Bottom-Center
-            [62, 17, 98, 35, 44, 53, 8, 71, 80, 89, 26],
-            // Cell 9: Bottom-Right
-            [9, 18, 27, 90, 63, 54, 45, 99, 81, 36, 72]
-        ];
-
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-
-        function shuffle(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        function getRandomSize() {
-            return SIZE_CLASSES[Math.floor(Math.random() * SIZE_CLASSES.length)];
-        }
-
-        function getRandomColor() {
-            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6fb7', '#a29bfe', '#fd79a8', '#00b894', '#fdcb6e', '#e17055'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        // ============================================
-        // SHUFFLE EACH CELL INDIVIDUALLY
-        // ============================================
-
-        function getShuffledGrid() {
-            return BASE_GRID_LAYOUT.map(cell => shuffle([...cell]));
-        }
-
-        // ============================================
-        // RENDER GRID
-        // ============================================
-
-        function renderGrid() {
-            const shuffledGrid = getShuffledGrid();
-            
-            for (let cellIdx = 0; cellIdx < CELLS; cellIdx++) {
-                const cell = document.getElementById('cell-' + cellIdx);
-                const label = cell.querySelector('.cell-label');
-                cell.innerHTML = '';
-                cell.appendChild(label);
-
-                const numbers = shuffledGrid[cellIdx] || [];
-
-                numbers.forEach(n => {
-                    const div = document.createElement('div');
-                    div.className = 'num ' + getRandomSize();
-                    div.id = 'num-' + n;
-                    div.textContent = n;
-                    div.dataset.number = n;
-                    div.onclick = () => clickNumber(n);
-                    cell.appendChild(div);
-                });
-            }
-        }
-
-        // ============================================
-        // GAME LOGIC
-        // ============================================
-
-        function startGame() {
-            game.playerName = 'Guest';
-            game.passwordVerified = false;
-            game.gridUnlocked = false;
-            game.restartCount = 0;
-
-            document.getElementById('playerDisplay').textContent = 'Guest';
-            document.getElementById('restartCountDisplay').textContent = '🔄 Restarts: 0/' + game.maxRestarts;
-
-            document.getElementById('masterGrid').classList.remove('show-grid');
-            updateRestartUI();
-
-            resetGame();
-        }
-
-        function resetGame() {
-            if (game.restartCount >= game.maxRestarts) {
-                showMessage('⚠️ Maximum restarts (' + game.maxRestarts + ') reached!', 'fail');
-                document.getElementById('restartBtn').disabled = true;
-                return;
-            }
-
-            if (game.timer) {
-                clearInterval(game.timer);
-                game.timer = null;
-            }
-
-            game.restartCount++;
-            game.currentNum = 1;
-            game.score = 0;
-            game.timeLeft = 60;
-            game.isPlaying = false;
-            game.found = new Set();
-            game.gameEnded = false;
-            game.passwordVerified = false;
-            game.gridUnlocked = false;
-
-            document.getElementById('masterGrid').classList.remove('show-grid');
-            document.getElementById('passwordOverlay').classList.remove('active');
-
-            renderGrid();
-
-            document.getElementById('msg').className = 'msg';
-            document.getElementById('msg').textContent = '';
-
-            updateUI();
-            updateRestartUI();
-
-            const timerEl = document.getElementById('timer');
-            timerEl.className = 'val timer';
-
-            document.querySelectorAll('.num').forEach(el => {
-                el.classList.remove('disabled');
-                el.classList.remove('found');
-                el.classList.remove('current');
-                el.classList.remove('wrong');
-            });
-
-            displayLeaderboard();
-
-            setTimeout(() => {
-                game.isPlaying = true;
-                startTimer();
-                showMessage('🎯 Find number 1 to start!', 'info');
-            }, 500);
-        }
-
-        function updateRestartUI() {
-            const left = game.maxRestarts - game.restartCount;
-            document.getElementById('restartsLeft').textContent = left;
-            document.getElementById('restartCountDisplay').textContent = '🔄 Restarts: ' + game.restartCount + '/' + game.maxRestarts;
-            
-            const btn = document.getElementById('restartBtn');
-            if (left <= 0) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
-        }
-
-        function startTimer() {
-            game.timer = setInterval(() => {
-                game.timeLeft--;
-                updateUI();
-
-                const timerEl = document.getElementById('timer');
-                if (game.timeLeft <= 5) {
-                    timerEl.className = 'val timer danger';
-                } else if (game.timeLeft <= 15) {
-                    timerEl.className = 'val timer warning';
-                }
-
-                if (game.timeLeft <= 0) {
-                    endGame(false);
-                }
-            }, 1000);
-        }
-
-        function clickNumber(number) {
-            if (!game.isPlaying || game.gameEnded) {
-                showMessage('⏳ Game over! Click "Restart" to play again.', 'info');
-                return;
-            }
-
-            if (game.found.has(number)) {
-                showMessage(`✅ ${number} already found!`, 'info');
-                return;
-            }
-
-            const element = document.getElementById('num-' + number);
-            if (!element) return;
-
-            if (number === game.currentNum) {
-                game.found.add(number);
-                game.score++;
-                game.currentNum++;
-
-                element.classList.add('found');
-                element.classList.remove('current');
-                updateUI();
-
-                if (game.score === TOTAL_NUMBERS) {
-                    endGame(true);
-                } else {
-                    const nextEl = document.getElementById('num-' + game.currentNum);
-                    if (nextEl) {
-                        nextEl.classList.add('current');
-                    }
-                    showMessage(`✅ Found ${number}! Next: ${game.currentNum}`, 'info');
-                }
-            } else if (number > game.currentNum) {
-                element.classList.add('wrong');
-                showMessage(`❌ Wrong! Need ${game.currentNum}`, 'info');
-                setTimeout(() => {
-                    element.classList.remove('wrong');
-                }, 400);
-            } else {
-                element.classList.add('wrong');
-                showMessage(`❌ ${number} already found! Next is ${game.currentNum}`, 'info');
-                setTimeout(() => {
-                    element.classList.remove('wrong');
-                }, 400);
-            }
-        }
-
-        function endGame(won) {
-            if (game.gameEnded) return;
-
-            game.gameEnded = true;
-            game.isPlaying = false;
-
-            if (game.timer) {
-                clearInterval(game.timer);
-                game.timer = null;
-            }
-
-            document.querySelectorAll('.num').forEach(el => {
-                el.classList.add('disabled');
-                el.classList.remove('current');
-            });
-
-            if (game.score > game.sessionBest) {
-                game.sessionBest = game.score;
-            }
-
-            if (game.score > 0) {
-                saveToLeaderboard('Guest', game.score);
-            }
-
-            if (won) {
-                showMessage(`🎉🎊 PERFECT! Guest found all 100 numbers! 🎊🎉`, 'celebrate');
-                celebrateWin();
-            } else {
-                showMessage(`⏰ Time up! Guest, you found ${game.score} numbers.`, 'fail');
-            }
-
-            updateUI();
-
-            setTimeout(() => {
-                showPasswordPrompt();
-            }, 1500);
-        }
-
-        // ============================================
-        // PASSWORD PROMPT
-        // ============================================
-
-        function showPasswordPrompt() {
-            document.getElementById('finalName').textContent = '👤 Guest';
-            document.getElementById('finalScore').textContent = '🎯 Score: ' + game.score + ' / 100';
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordError').classList.remove('show');
-            document.getElementById('passwordOverlay').classList.add('active');
-
-            setTimeout(() => {
-                document.getElementById('passwordInput').focus();
-            }, 300);
-        }
-
-        function verifyPassword() {
-            const input = document.getElementById('passwordInput');
-            const error = document.getElementById('passwordError');
-
-            if (input.value.trim() === PASSWORD) {
-                error.classList.remove('show');
-                game.passwordVerified = true;
-                game.gridUnlocked = true;
-
-                document.getElementById('masterGrid').classList.add('show-grid');
-                document.getElementById('passwordOverlay').classList.remove('active');
-
-                showMessage('🔓 Grid unlocked! 3×3 structure revealed.', 'success');
-
-                document.querySelectorAll('.num').forEach(el => {
-                    el.classList.remove('disabled');
-                    el.style.cursor = 'default';
-                    el.onclick = null;
-                });
-
-                displayLeaderboard();
-
-            } else {
-                error.classList.add('show');
-                input.value = '';
-                input.focus();
-                setTimeout(() => {
-                    error.classList.remove('show');
-                }, 3000);
-            }
-        }
-
-        document.getElementById('passwordInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                verifyPassword();
-            }
-        });
-
-        // ============================================
-        // LEADERBOARD (Local Storage)
-        // ============================================
-
-        function getLeaderboard() {
-            try {
-                return JSON.parse(localStorage.getItem('srmLeaderboard')) || [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveToLeaderboard(name, score) {
-            let board = getLeaderboard();
-            board.push({ name, score, date: new Date().toLocaleString() });
-            board.sort((a, b) => b.score - a.score);
-            board = board.slice(0, 10);
-            localStorage.setItem('srmLeaderboard', JSON.stringify(board));
-            displayLeaderboard();
-        }
-
-        function displayLeaderboard() {
-            const board = getLeaderboard();
-            const list = document.getElementById('leaderboardList');
-
-            if (board.length === 0) {
-                list.innerHTML = '<div class="no-scores">No scores yet. Be the first!</div>';
-                return;
-            }
-
-            list.innerHTML = board.map((item, index) => {
-                let rankClass = '';
-                let rankIcon = `#${index + 1}`;
-                if (index === 0) { rankClass = 'top1'; rankIcon = '🥇'; } 
-                else if (index === 1) { rankClass = 'top2'; rankIcon = '🥈'; } 
-                else if (index === 2) { rankClass = 'top3'; rankIcon = '🥉'; }
-
-                return `<div class="lb-item ${rankClass}">
-                            <span class="rank">${rankIcon}</span>
-                            <span class="name">${escapeHtml(item.name)}</span>
-                            <span class="score">${item.score}</span>
-                        </div>`;
-            }).join('');
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ============================================
-        // UI UPDATES
-        // ============================================
-
-        function updateUI() {
-            document.getElementById('timer').textContent = game.timeLeft;
-            document.getElementById('score').textContent = game.score;
-            document.getElementById('sessionBest').textContent = game.sessionBest;
-        }
-
-        function showMessage(text, type) {
-            const msg = document.getElementById('msg');
-            msg.textContent = text;
-            msg.className = 'msg ' + type;
-
-            if (type === 'info') {
-                setTimeout(() => {
-                    if (msg.className === 'msg info') {
-                        msg.className = 'msg';
-                        msg.textContent = '';
-                    }
-                }, 2000);
-            }
-        }
-
-        // ============================================
-        // CELEBRATION EFFECTS
-        // ============================================
-
-        function celebrateWin() {
-            for (let i = 0; i < 80; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    const size = 6 + Math.random() * 12;
-                    const duration = 2 + Math.random() * 3;
-                    const left = Math.random() * 100;
-                    const isCircle = Math.random() > 0.5;
-
-                    confetti.style.cssText = `
-                                position: fixed;
-                                width: ${size}px;
-                                height: ${size * (0.6 + Math.random() * 0.8)}px;
-                                background: ${getRandomColor()};
-                                left: ${left}vw;
-                                top: -10px;
-                                border-radius: ${isCircle ? '50%' : '2px'};
-                                animation: confettiFall ${duration}s linear forwards;
-                                pointer-events: none;
-                                z-index: 9999;
-                                box-shadow: 0 0 10px rgba(255,255,255,0.2);
-                            `;
-
-                    document.body.appendChild(confetti);
-
-                    setTimeout(() => {
-                        confetti.remove();
-                    }, duration * 1000 + 100);
-                }, i * 60);
-            }
-        }
-
-        // ============================================
-        // KEYBOARD SHORTCUTS
-        // ============================================
-
-        document.addEventListener('keydown', (e) => {
-            if ((e.key === 'r' || e.key === 'R') &&
-                document.getElementById('gameArea').style.display === 'flex' &&
-                !document.getElementById('passwordOverlay').classList.contains('active')) {
-                resetGame();
-            }
-            if (e.key === 'Escape' && document.getElementById('passwordOverlay').classList.contains('active')) {
-                if (game.passwordVerified) {
-                    document.getElementById('passwordOverlay').classList.remove('active');
-                }
-            }
-        });
-
-        // ============================================
-        // INITIALIZE - AUTO START THE GAME
-        // ============================================
-
-        window.onload = function() {
-            // Render the grid first
-            renderGrid();
-            
-            // Set initial values
-            document.getElementById('sessionBest').textContent = '0';
-            document.getElementById('playerDisplay').textContent = 'Guest';
-            
-            // Display leaderboard
-            displayLeaderboard();
-            
-            // Update restart UI
-            updateRestartUI();
-            
-            // Start the game immediately!
-            startGame();
-        };
-    </script>
 </body>
 </html>
