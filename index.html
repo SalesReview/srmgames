@@ -23,6 +23,41 @@
             margin: 0 auto;
         }
 
+        /* EXPIRY BANNER */
+        .expiry-banner {
+            text-align: center;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #f39c12;
+            animation: pulseBanner 2s ease-in-out infinite;
+        }
+
+        .expiry-banner .expiry-date {
+            color: #fff;
+            font-size: clamp(18px, 2vw, 28px);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .expiry-banner .expiry-date span {
+            color: #f39c12;
+            font-size: clamp(22px, 2.5vw, 34px);
+        }
+
+        .expiry-banner .expiry-message {
+            color: #ffeaa7;
+            font-size: clamp(14px, 1.2vw, 18px);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        @keyframes pulseBanner {
+            0%, 100% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(231, 76, 60, 0.6), 0 0 80px rgba(243, 156, 18, 0.2); }
+        }
+
         .header {
             text-align: center;
             padding: 30px 20px;
@@ -211,6 +246,76 @@
             color: #f39c12;
         }
 
+        /* EXPIRED OVERLAY */
+        #expiredOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #expiredOverlay.active {
+            display: flex;
+        }
+
+        .expired-box {
+            text-align: center;
+            padding: 50px 60px;
+            background: linear-gradient(135deg, #1a1a2e, #2c3e50);
+            border-radius: 30px;
+            border: 3px solid #e74c3c;
+            box-shadow: 0 0 80px rgba(231, 76, 60, 0.3);
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .expired-box .icon-big {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+
+        .expired-box h1 {
+            color: #e74c3c;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .expired-box .expired-date {
+            color: #f39c12;
+            font-size: clamp(24px, 3vw, 38px);
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .expired-box p {
+            color: #aaa;
+            font-size: clamp(16px, 1.5vw, 22px);
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .expired-box .contact {
+            color: #3498db;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: clamp(14px, 1.2vw, 18px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -228,22 +333,36 @@
             .game-card { min-height: 200px; }
             .nav-bar { gap: 8px; }
             .nav-bar a { padding: 5px 12px; font-size: 12px; }
+            .expired-box { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- EXPIRY BANNER -->
+        <div class="expiry-banner">
+            <div class="expiry-date">
+                ⏰ Valid Until: <span>18th June 2026</span>
+            </div>
+            <div class="expiry-message">
+                ⚠️ This page will expire after 18th June 2026
+            </div>
+        </div>
+
+        <!-- HEADER -->
         <div class="header">
             <h1>🏢 SRM <span>GAMES HUB</span></h1>
             <p>Learn Business Processes Through Interactive Games</p>
             <div class="sub">10 Games to Master the Complete Business Pipeline</div>
         </div>
 
+        <!-- NAVIGATION -->
         <div class="nav-bar">
             <a href="index.html" class="active">🏠 Home</a>
             <a href="about.html">ℹ️ About</a>
         </div>
 
+        <!-- GAMES GRID -->
         <div class="games-grid">
             <!-- GAME 1: Business Pipeline -->
             <div class="game-card g1">
@@ -251,7 +370,7 @@
                 <span class="badge ready">✅ Ready</span>
                 <h3>Business Pipeline</h3>
                 <p>Arrange 21 business process levels in correct sequence. 9 steps per level. 4 teams can compete!</p>
-                <a href="srm-games/Pipeline/" class="btn-play">▶ Play Now</a>
+                <a href="Pipeline/" class="btn-play">▶ Play Now</a>
             </div>
 
             <!-- GAME 2: Number Concentration -->
@@ -260,7 +379,7 @@
                 <span class="badge ready">✅ Ready</span>
                 <h3>Number Concentration</h3>
                 <p>Find and click numbers 1-100 in sequence within 60 seconds. Test your focus and speed!</p>
-                <a href="srm-games/Numbergame/" class="btn-play">▶ Play Now</a>
+                <a href="Numbergame/" class="btn-play">▶ Play Now</a>
             </div>
 
             <!-- GAME 3: Lead Generation -->
@@ -336,9 +455,64 @@
             </div>
         </div>
 
+        <!-- FOOTER -->
         <div class="footer">
             Made with ❤️ • <span>SRM Business Games</span> • 10 Games • v2.0
         </div>
     </div>
+
+    <!-- EXPIRED OVERLAY -->
+    <div id="expiredOverlay" class="active">
+        <div class="expired-box">
+            <div class="icon-big">⛔</div>
+            <h1>PAGE EXPIRED</h1>
+            <div class="expired-date">📅 18th June 2026</div>
+            <p>
+                This page was valid only until <strong style="color:#f39c12;">18th June 2026</strong>.<br>
+                The content has been <strong style="color:#e74c3c;">archived</strong> and is no longer available.
+            </p>
+            <p style="font-size: clamp(13px, 1vw, 16px); color: #666;">
+                ⏳ This page has reached its expiry date.
+            </p>
+            <div class="contact">
+                📧 Contact your administrator for access
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // EXPIRY DATE CHECK
+        // ============================================
+
+        (function() {
+            // EXPIRY DATE: 18th June 2026
+            const expiryDate = new Date(2026, 5, 18); // Month is 0-indexed: 5 = June
+            const today = new Date();
+            const overlay = document.getElementById('expiredOverlay');
+
+            // Check if current date is on or after expiry date
+            if (today >= expiryDate) {
+                // Page expired - show overlay
+                overlay.classList.add('active');
+                // Hide all content behind overlay
+                document.querySelector('.container').style.opacity = '0.2';
+                document.querySelector('.container').style.pointerEvents = 'none';
+            } else {
+                // Page is still valid - hide overlay
+                overlay.classList.remove('active');
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.pointerEvents = 'auto';
+
+                // Calculate days remaining
+                const timeDiff = expiryDate - today;
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                // Show days remaining in console (optional)
+                console.log(`📅 Days remaining until expiry: ${daysRemaining} days`);
+            }
+        })();
+    </script>
+
 </body>
 </html>
