@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRM Games Hub</title>
+    <title>About - SRM Games Hub</title>
     <style>
         * {
             margin: 0;
@@ -19,11 +19,10 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
-        /* HEADER */
         .header {
             text-align: center;
             padding: 30px 20px;
@@ -35,27 +34,11 @@
 
         .header h1 {
             color: #f39c12;
-            font-size: clamp(32px, 4vw, 56px);
-            letter-spacing: 2px;
+            font-size: clamp(28px, 3.5vw, 48px);
         }
+        .header h1 span { color: #e74c3c; }
+        .header p { color: #aaa; font-size: clamp(14px, 1.2vw, 20px); margin-top: 8px; }
 
-        .header h1 span {
-            color: #e74c3c;
-        }
-
-        .header p {
-            color: #aaa;
-            font-size: clamp(14px, 1.2vw, 20px);
-            margin-top: 8px;
-        }
-
-        .header .sub {
-            color: #888;
-            font-size: clamp(12px, 1vw, 16px);
-            margin-top: 4px;
-        }
-
-        /* NAVIGATION */
         .nav-bar {
             display: flex;
             gap: 15px;
@@ -88,121 +71,49 @@
             color: #1a1a2e;
         }
 
-        /* GAMES GRID */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 10px 0;
-        }
-
-        .game-card {
-            background: rgba(255, 255, 255, 0.07);
+        .about-content {
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 25px 20px;
-            text-align: center;
-            transition: all 0.4s;
+            padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            min-height: 250px;
         }
 
-        .game-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-            border-color: rgba(243, 156, 18, 0.3);
-            background: rgba(255, 255, 255, 0.1);
+        .about-content h2 {
+            color: #f39c12;
+            font-size: clamp(22px, 2vw, 30px);
+            margin: 20px 0 10px;
         }
 
-        .game-card .icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
+        .about-content h2:first-child { margin-top: 0; }
 
-        .game-card .badge {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .game-card .badge.ready {
-            background: #27ae60;
-            color: #fff;
-        }
-
-        .game-card .badge.coming {
-            background: #f39c12;
-            color: #1a1a2e;
-        }
-
-        .game-card .badge.beta {
-            background: #3498db;
-            color: #fff;
-        }
-
-        .game-card h3 {
-            color: #fff;
-            font-size: clamp(18px, 1.4vw, 22px);
-            margin-bottom: 8px;
-        }
-
-        .game-card p {
-            color: #aaa;
-            font-size: clamp(13px, 1vw, 15px);
-            line-height: 1.6;
-            flex: 1;
-        }
-
-        .game-card .btn-play {
-            display: inline-block;
-            padding: 10px 30px;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
+        .about-content p {
+            color: #ccc;
             font-size: clamp(14px, 1.1vw, 17px);
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .about-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .about-content ul li {
+            padding: 10px 0;
+            color: #ccc;
+            font-size: clamp(14px, 1.1vw, 17px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .about-content ul li::before {
+            content: "✅ ";
+        }
+
+        .about-content .highlight {
+            color: #f39c12;
             font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-top: 12px;
         }
 
-        .game-card .btn-play:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 25px rgba(46, 204, 113, 0.4);
-        }
-
-        .game-card .btn-play.disabled {
-            background: #555;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .game-card .btn-play.disabled:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* GAME CARD COLORS */
-        .game-card.g1 { border-left: 4px solid #e74c3c; }
-        .game-card.g2 { border-left: 4px solid #3498db; }
-        .game-card.g3 { border-left: 4px solid #2ecc71; }
-        .game-card.g4 { border-left: 4px solid #f39c12; }
-        .game-card.g5 { border-left: 4px solid #9b59b6; }
-        .game-card.g6 { border-left: 4px solid #1abc9c; }
-        .game-card.g7 { border-left: 4px solid #e67e22; }
-        .game-card.g8 { border-left: 4px solid #2c3e50; }
-        .game-card.g9 { border-left: 4px solid #c0392b; }
-        .game-card.g10 { border-left: 4px solid #16a085; }
-
-        /* FOOTER */
         .footer {
             text-align: center;
             padding: 20px;
@@ -212,26 +123,11 @@
             font-size: clamp(12px, 0.9vw, 15px);
         }
 
-        .footer span {
-            color: #f39c12;
-        }
-
-        /* SCROLLBAR */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1a2e;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #f39c12;
-            border-radius: 4px;
-        }
+        .footer span { color: #f39c12; }
 
         @media (max-width: 600px) {
             body { padding: 10px; }
-            .games-grid { grid-template-columns: 1fr; }
-            .game-card { min-height: 200px; }
+            .about-content { padding: 20px; }
             .nav-bar { gap: 8px; }
             .nav-bar a { padding: 5px 12px; font-size: 12px; }
         }
@@ -241,108 +137,60 @@
     <div class="container">
         <!-- HEADER -->
         <div class="header">
-            <h1>🏢 SRM <span>GAMES HUB</span></h1>
-            <p>Learn Business Processes Through Interactive Games</p>
-            <div class="sub">10 Games to Master the Complete Business Pipeline</div>
+            <h1>ℹ️ About <span>SRM Games</span></h1>
+            <p>10 Games to Master the Complete Business Pipeline</p>
         </div>
 
         <!-- NAVIGATION -->
         <div class="nav-bar">
-            <a href="index.html" class="active">🏠 Home</a>
-            <a href="about.html">ℹ️ About</a>
+            <a href="index.html">🏠 Home</a>
+            <a href="about.html" class="active">ℹ️ About</a>
         </div>
 
-        <!-- GAMES GRID -->
-        <div class="games-grid">
-            <!-- GAME 1: Business Pipeline -->
-            <div class="game-card g1">
-                <div class="icon">🔗</div>
-                <span class="badge ready">✅ Ready</span>
-                <h3>Business Pipeline</h3>
-                <p>Arrange 21 business process levels in correct sequence. 9 steps per level. 4 teams can compete!</p>
-                <a href="game1/index.html" class="btn-play">▶ Play Now</a>
-            </div>
+        <!-- ABOUT CONTENT -->
+        <div class="about-content">
+            <h2>🎯 What is SRM Games Hub?</h2>
+            <p>
+                <strong>SRM Games Hub</strong> is a collection of <span class="highlight">10 interactive games</span> 
+                designed to help sales, service, and business professionals master the complete 
+                <span class="highlight">business pipeline</span> through engaging gameplay.
+            </p>
 
-            <!-- GAME 2: Lead Generation -->
-            <div class="game-card g2">
-                <div class="icon">🎯</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Lead Generation</h3>
-                <p>Master the art of finding and qualifying business leads through interactive scenarios.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
+            <h2>🎮 How It Works</h2>
+            <ul>
+                <li><strong>Game 1:</strong> Business Pipeline - Arrange 21 levels of business processes</li>
+                <li><strong>Game 2-10:</strong> Coming soon - Each focusing on a specific business area</li>
+                <li>Each game teaches structured, sequential thinking</li>
+                <li>Perfect for team training and competitions</li>
+            </ul>
 
-            <!-- GAME 3: Sales Pipeline -->
-            <div class="game-card g3">
-                <div class="icon">📊</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Sales Pipeline</h3>
-                <p>Learn the complete sales process from prospecting to closing deals.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
+            <h2>🏆 The Business Pipeline Game</h2>
+            <ul>
+                <li><span class="highlight">21 Levels</span> covering complete business process</li>
+                <li><span class="highlight">4 Teams</span> can compete simultaneously</li>
+                <li><span class="highlight">9 Steps</span> per level to arrange in correct order</li>
+                <li><span class="highlight">60-second timer</span> adds urgency</li>
+                <li><span class="highlight">Brain Stormer</span> hints for thinking prompts</li>
+                <li><span class="highlight">Wrong answer</span> restarts from Level 1</li>
+                <li><span class="highlight">Score tracking</span> across all levels</li>
+            </ul>
 
-            <!-- GAME 4: Negotiation Skills -->
-            <div class="game-card g4">
-                <div class="icon">🤝</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Negotiation Skills</h3>
-                <p>Practice negotiation strategies and learn to handle objections effectively.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
+            <h2>📊 Business Processes Covered</h2>
+            <ul>
+                <li>Lead Generation → Qualification → Quotation → Negotiation → Finalisation</li>
+                <li>Drawings → Site Preparation → Payment → Delivery → Handover</li>
+                <li>Free Service → AMC Quotation → AMC Negotiation → AMC Payment</li>
+                <li>Modernisation → Upgradation → Replacement → AMC Strategy</li>
+            </ul>
 
-            <!-- GAME 5: Project Management -->
-            <div class="game-card g5">
-                <div class="icon">📋</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Project Management</h3>
-                <p>Learn project planning, execution, and delivery management skills.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
-
-            <!-- GAME 6: Customer Service -->
-            <div class="game-card g6">
-                <div class="icon">⭐</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Customer Service</h3>
-                <p>Master customer handling, complaint resolution, and service excellence.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
-
-            <!-- GAME 7: AMC Strategy -->
-            <div class="game-card g7">
-                <div class="icon">🔄</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>AMC Strategy</h3>
-                <p>Learn Annual Maintenance Contract strategies and client retention.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
-
-            <!-- GAME 8: Upgradation Planning -->
-            <div class="game-card g8">
-                <div class="icon">🚀</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Upgradation Planning</h3>
-                <p>Plan and execute modernization and upgradation projects.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
-
-            <!-- GAME 9: Quotation Management -->
-            <div class="game-card g9">
-                <div class="icon">📄</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Quotation Management</h3>
-                <p>Learn to create, negotiate, and finalize business quotations.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
-
-            <!-- GAME 10: Delivery & Handover -->
-            <div class="game-card g10">
-                <div class="icon">🚚</div>
-                <span class="badge coming">⏳ Coming Soon</span>
-                <h3>Delivery & Handover</h3>
-                <p>Master the complete delivery, installation, and handover process.</p>
-                <button class="btn-play disabled">⏳ Coming Soon</button>
-            </div>
+            <h2>💡 Why Play?</h2>
+            <ul>
+                <li>Learn the <span class="highlight">complete business pipeline</span> in a fun way</li>
+                <li>Develop <span class="highlight">structured thinking</span> and process understanding</li>
+                <li>Perfect for <span class="highlight">team building</span> and training</li>
+                <li>Track your <span class="highlight">progress</span> across all games</li>
+                <li>Compete with colleagues and <span class="highlight">learn together</span></li>
+            </ul>
         </div>
 
         <!-- FOOTER -->
